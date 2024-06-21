@@ -1,15 +1,13 @@
-import 'package:better_clock_flutter_app/layouts/main_layout.dart';
 import 'package:flutter/material.dart';
 
 class StopwatchScreen extends StatelessWidget {
+  static const kRouteName = '/stopwatch';
   const StopwatchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MainLayout(
-      body: Center(
-        child: Text('Stop Watch Screen'),
-      ),
+    return Center(
+      child: Text('Stop Watch Screen'),
     );
   }
 }
