@@ -1,6 +1,6 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
-import 'constants/colors.dart';
 import 'navigation/app_navigation.dart';
 
 main() {
@@ -33,17 +33,12 @@ class _MyAppState extends State<MyApp> {
       routerConfig: AppNavigation.router,
       title: 'Better Clock',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: kPrimaryColor,
-        ),
+      theme: FlexThemeData.light(
+        scheme: FlexScheme.indigoM3,
         useMaterial3: true,
       ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: kPrimaryColor,
-          brightness: Brightness.dark,
-        ),
+      darkTheme: FlexThemeData.dark(
+        scheme: FlexScheme.indigoM3,
         useMaterial3: true,
       ),
       themeMode: _themeMode,

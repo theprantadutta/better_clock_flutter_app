@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../constants/colors.dart';
 import '../../main.dart';
 
 class FloatingChangeThemeButton extends StatelessWidget {
@@ -20,7 +19,7 @@ class FloatingChangeThemeButton extends StatelessWidget {
 
     return FloatingActionButton(
       onPressed: handleThemeToggle,
-      backgroundColor: kPrimaryColor,
+      backgroundColor: Theme.of(context).primaryColor,
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 500),
         child: Icon(

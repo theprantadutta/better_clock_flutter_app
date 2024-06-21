@@ -16,11 +16,9 @@ class TopLevelPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomBarHeight = MediaQuery.sizeOf(context).height * 0.08;
     return Stack(
       children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: bottomBarHeight + 15),
+        SafeArea(
           child: PageView(
             onPageChanged: onPageChanged,
             controller: pageController,

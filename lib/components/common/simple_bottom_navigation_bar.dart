@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../constants/colors.dart';
-
 class SimpleBottomNavigationBar extends StatefulWidget {
   final int selectedIndex;
   final void Function(int) updateCurrentPageIndex;
@@ -18,28 +16,6 @@ class SimpleBottomNavigationBar extends StatefulWidget {
 }
 
 class _SimpleBottomNavigationBarState extends State<SimpleBottomNavigationBar> {
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index;
-  //     switch (index) {
-  //       case 0:
-  //         Navigator.pushReplacementNamed(context, AlarmsScreen.kRouteName);
-  //         break;
-  //       case 1:
-  //         Navigator.pushReplacementNamed(context, WorldClockScreen.kRouteName);
-  //         break;
-  //       case 2:
-  //         Navigator.pushReplacementNamed(context, StopwatchScreen.kRouteName);
-  //         break;
-  //       case 3:
-  //         Navigator.pushReplacementNamed(context, TimerScreen.kRouteName);
-  //         break;
-  //       default:
-  //         throw Exception('Something Went Wrong');
-  //     }
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -67,7 +43,7 @@ class _SimpleBottomNavigationBarState extends State<SimpleBottomNavigationBar> {
           ),
         ],
         currentIndex: widget.selectedIndex,
-        selectedItemColor: kPrimaryColor,
+        selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Theme.of(context).textTheme.bodyLarge?.color,
         elevation: 0,
         selectedLabelStyle: const TextStyle(
