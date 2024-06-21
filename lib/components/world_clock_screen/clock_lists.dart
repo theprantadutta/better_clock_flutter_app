@@ -19,7 +19,7 @@ class ClockLists extends StatelessWidget {
               color: Theme.of(context).primaryColor.withOpacity(0.05),
               borderRadius: BorderRadius.circular(15),
             ),
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
@@ -33,7 +33,7 @@ class ClockLists extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       'Today',
                       style: TextStyle(

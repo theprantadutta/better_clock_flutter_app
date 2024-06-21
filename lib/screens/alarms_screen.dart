@@ -19,7 +19,7 @@ class AlarmsScreen extends StatelessWidget {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.09,
                   width: MediaQuery.sizeOf(context).width,
-                  child: Column(
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -40,7 +40,7 @@ class AlarmsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                AlarmsList(),
+                const AlarmsList(),
               ],
             ),
           ),
