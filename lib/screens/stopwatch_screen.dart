@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../components/stopwatch_screen/analog_stopwatch.dart';
+
 class StopwatchScreen extends StatelessWidget {
   static const kRouteName = '/stopwatch';
   const StopwatchScreen({super.key});
@@ -7,7 +9,7 @@ class StopwatchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Stop Watch Screen'),
+      child: AnalogStopwatch(),
     );
   }
 }

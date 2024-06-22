@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../components/alarms_screen/alarms_list.dart';
+import '../components/common/floating_add_button.dart';
 
 class AlarmsScreen extends StatelessWidget {
   static const kRouteName = '/alarms';
@@ -44,24 +45,9 @@ class AlarmsScreen extends StatelessWidget {
               ],
             ),
           ),
-          Positioned(
-            child: SizedBox(
-              height: MediaQuery.sizeOf(context).height -
-                  kBottomNavigationBarHeight -
-                  MediaQuery.sizeOf(context).height * 0.08,
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: FloatingActionButton(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  // shape: const CircleBorder(),
-                  child: const Icon(
-                    Icons.add_outlined,
-                    size: 40,
-                  ),
-                  onPressed: () {},
-                ),
-              ),
-            ),
+          FloatingAddButton(
+            iconData: Icons.add_outlined,
+            onPressed: () {},
           ),
         ],
       ),
