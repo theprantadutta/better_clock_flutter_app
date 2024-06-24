@@ -9,7 +9,13 @@ class StopwatchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: AnalogStopwatch(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          AnalogStopwatch(),
+        ],
+      ),
     );
   }
 }
