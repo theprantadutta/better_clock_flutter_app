@@ -17,7 +17,7 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       margin: const EdgeInsets.symmetric(vertical: 5),
-      height: MediaQuery.sizeOf(context).height * 0.12,
+      height: MediaQuery.sizeOf(context).height * 0.14,
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor.withOpacity(0.05),
         borderRadius: BorderRadius.circular(15),
@@ -29,6 +29,13 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'Alarm',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,

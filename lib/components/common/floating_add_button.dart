@@ -1,32 +1,55 @@
 import 'package:flutter/material.dart';
 
 class FloatingAddButton extends StatelessWidget {
+  final String title;
   final IconData iconData;
   final void Function() onPressed;
 
   const FloatingAddButton({
     super.key,
-    required this.iconData,
+    required this.title,
     required this.onPressed,
+    required this.iconData,
   });
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      child: SizedBox(
-        height: MediaQuery.sizeOf(context).height -
-            kBottomNavigationBarHeight -
-            MediaQuery.sizeOf(context).height * 0.08,
-        child: Align(
-          alignment: FractionalOffset.bottomCenter,
-          child: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColor,
-            onPressed: onPressed,
-            // shape: const CircleBorder(),
-            child: Icon(
-              iconData,
-              size: 40,
-            ),
+      bottom: 10,
+      left: (MediaQuery.sizeOf(context).width -
+              MediaQuery.sizeOf(context).width * 0.4) /
+          2,
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          padding: const EdgeInsets.only(
+            left: 5,
+            right: 12,
+          ),
+          height: MediaQuery.sizeOf(context).height * 0.055,
+          width: MediaQuery.sizeOf(context).width * 0.4,
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                iconData,
+                size: 30,
+                color: Colors.white,
+              ),
+              const SizedBox(width: 5),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       ),

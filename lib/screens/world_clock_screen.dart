@@ -37,6 +37,7 @@ class WorldClockScreen extends StatelessWidget {
           FloatingAddButton(
             iconData: Icons.add_outlined,
             onPressed: () {},
+            title: 'Add Clock',
           ),
         ],
       ),

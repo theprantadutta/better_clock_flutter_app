@@ -34,11 +34,11 @@ class _MyAppState extends State<MyApp> {
       title: 'Better Clock',
       debugShowCheckedModeBanner: false,
       theme: FlexThemeData.light(
-        scheme: FlexScheme.indigoM3,
+        scheme: FlexScheme.cyanM3,
         useMaterial3: true,
       ),
       darkTheme: FlexThemeData.dark(
-        scheme: FlexScheme.indigoM3,
+        scheme: FlexScheme.cyanM3,
         useMaterial3: true,
       ),
       themeMode: _themeMode,

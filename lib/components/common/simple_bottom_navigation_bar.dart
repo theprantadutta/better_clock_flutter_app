@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../packages/advanced_salomon_bottom_bar/advanced_salomon_bottom_bar.dart';
+
 class SimpleBottomNavigationBar extends StatefulWidget {
   final int selectedIndex;
   final void Function(int) updateCurrentPageIndex;
@@ -18,45 +20,27 @@ class SimpleBottomNavigationBar extends StatefulWidget {
 class _SimpleBottomNavigationBarState extends State<SimpleBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-      ),
-      child: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.alarm),
-            label: 'Alarms',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.language),
-            label: 'World Clock',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.query_builder),
-            label: 'Stopwatch',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.hourglass_empty),
-            label: 'Timer',
-          ),
-        ],
-        currentIndex: widget.selectedIndex,
-        selectedItemColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Theme.of(context).textTheme.bodyLarge?.color,
-        elevation: 0,
-        selectedLabelStyle: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w400,
+    return AdvancedSalomonBottomBar(
+      currentIndex: widget.selectedIndex,
+      onTap: widget.updateCurrentPageIndex,
+      items: [
+        AdvancedSalomonBottomBarItem(
+          icon: const Icon(Icons.alarm),
+          title: const Text('Alarms'),
         ),
-        unselectedLabelStyle: const TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w400,
+        AdvancedSalomonBottomBarItem(
+          icon: const Icon(Icons.language),
+          title: const Text('World Clock'),
         ),
-        type: BottomNavigationBarType.fixed,
-        onTap: widget.updateCurrentPageIndex,
-      ),
+        AdvancedSalomonBottomBarItem(
+          icon: const Icon(Icons.query_builder),
+          title: const Text('Stopwatch'),
+        ),
+        AdvancedSalomonBottomBarItem(
+          icon: const Icon(Icons.hourglass_empty),
+          title: const Text('Timer'),
+        ),
+      ],
     );
   }
 }

@@ -8,7 +8,7 @@ class AlarmsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.sizeOf(context).height * 0.68,
+      height: MediaQuery.sizeOf(context).height * 0.74,
       child: ListView.builder(
         itemCount: 8,
         itemBuilder: (context, index) {
