@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_system_ringtones/flutter_system_ringtones.dart';
 import 'package:go_router/go_router.dart';
 
 import 'alarm_type_button.dart';
@@ -17,6 +18,8 @@ class CreateOrUpdateAlarm extends StatefulWidget {
 class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
   bool ringOnce = true;
   bool shouldVibrate = true;
+  Duration alarmTime = const Duration(minutes: 420);
+  String alarmTitle = '';
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,11 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
               ],
             ),
           ),
-          const TimerPicker(initialDuration: Duration(hours: 6, minutes: 20)),
+          TimerPicker(
+            initialDuration: alarmTime,
+            addOrUpdateAlarm: (duration) =>
+                setState(() => alarmTime = duration),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Row(
@@ -72,52 +79,57 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
               ],
             ),
           ),
-          Container(
-            decoration: BoxDecoration(
-              // border: Border.all(color: kPrimaryColor),
-              color: kPrimaryColor.withOpacity(0.04),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            height: MediaQuery.sizeOf(context).height * 0.16,
-            width: MediaQuery.sizeOf(context).width,
-            margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Repeat',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+          if (!ringOnce)
+            Container(
+              decoration: BoxDecoration(
+                // border: Border.all(color: kPrimaryColor),
+                color: kPrimaryColor.withOpacity(0.04),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              height: MediaQuery.sizeOf(context).height * 0.16,
+              width: MediaQuery.sizeOf(context).width,
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Repeat',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    DayButton(title: 'SUN', onPressed: () {}, isSelected: true),
-                    DayButton(
-                        title: 'MON', onPressed: () {}, isSelected: false),
-                    DayButton(title: 'TUE', onPressed: () {}, isSelected: true),
-                    DayButton(
-                        title: 'WED', onPressed: () {}, isSelected: false),
-                    DayButton(
-                        title: 'THU', onPressed: () {}, isSelected: false),
-                    DayButton(title: 'FRI', onPressed: () {}, isSelected: true),
-                    DayButton(title: 'SAT', onPressed: () {}, isSelected: true),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      DayButton(
+                          title: 'SUN', onPressed: () {}, isSelected: true),
+                      DayButton(
+                          title: 'MON', onPressed: () {}, isSelected: false),
+                      DayButton(
+                          title: 'TUE', onPressed: () {}, isSelected: true),
+                      DayButton(
+                          title: 'WED', onPressed: () {}, isSelected: false),
+                      DayButton(
+                          title: 'THU', onPressed: () {}, isSelected: false),
+                      DayButton(
+                          title: 'FRI', onPressed: () {}, isSelected: true),
+                      DayButton(
+                          title: 'SAT', onPressed: () {}, isSelected: true),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
           Container(
             // padding: EdgeInsets.all(15.0),
             decoration: BoxDecoration(
@@ -129,8 +141,9 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
             child: Column(
               children: [
                 TextField(
+                  onChanged: (value) => alarmTitle = value,
                   onTapOutside: (event) {
-                    print('onTapOutside');
+                    // print('onTapOutside');
                     FocusManager.instance.primaryFocus?.unfocus();
                   },
                   decoration: InputDecoration(
@@ -173,43 +186,46 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
                     ),
                   ),
                 ),
-                Container(
-                  height: MediaQuery.sizeOf(context).height * 0.08,
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kPrimaryColor.withOpacity(0.3)),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Ringtone',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
+                GestureDetector(
+                  onTap: () async {},
+                  child: Container(
+                    height: MediaQuery.sizeOf(context).height * 0.08,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: kPrimaryColor.withOpacity(0.3)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Ringtone',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            'Fair Views',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: kPrimaryColor,
+                            const SizedBox(height: 2),
+                            Text(
+                              'Fair Views',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: kPrimaryColor,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const Icon(Icons.keyboard_arrow_right),
-                    ],
+                          ],
+                        ),
+                        const Icon(Icons.keyboard_arrow_right),
+                      ],
+                    ),
                   ),
                 ),
                 Container(

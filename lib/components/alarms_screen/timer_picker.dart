@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 
 class TimerPicker extends StatefulWidget {
   final Duration initialDuration;
+  final void Function(Duration duration) addOrUpdateAlarm;
 
-  const TimerPicker({super.key, required this.initialDuration});
+  const TimerPicker(
+      {super.key,
+      required this.initialDuration,
+      required this.addOrUpdateAlarm});
 
   @override
   State<TimerPicker> createState() => _TimerPickerState();
@@ -23,6 +27,14 @@ class _TimerPickerState extends State<TimerPicker> {
         : widget.initialDuration.inHours % 12;
     _selectedMinute = widget.initialDuration.inMinutes % 60;
     _selectedPeriod = widget.initialDuration.inHours >= 12 ? 'PM' : 'AM';
+  }
+
+  void updateDuration() {
+    int hour = _selectedHour % 12;
+    if (_selectedPeriod == 'PM') {
+      hour += 12;
+    }
+    widget.addOrUpdateAlarm(Duration(hours: hour, minutes: _selectedMinute));
   }
 
   @override
@@ -54,6 +66,7 @@ class _TimerPickerState extends State<TimerPicker> {
               setState(() {
                 _selectedHour = index + 1;
               });
+              updateDuration();
             },
             initialItem: _selectedHour - 1,
             looping: true,
@@ -61,9 +74,10 @@ class _TimerPickerState extends State<TimerPicker> {
           const SizedBox(width: 10),
           _buildPicker(
             children: List<Widget>.generate(60, (int index) {
+              String formattedNumber = index.toString().padLeft(2, '0');
               return Center(
                 child: Text(
-                  '$index',
+                  formattedNumber,
                   style: defaultTextStyle,
                 ),
               );
@@ -72,6 +86,7 @@ class _TimerPickerState extends State<TimerPicker> {
               setState(() {
                 _selectedMinute = index;
               });
+              updateDuration();
             },
             initialItem: _selectedMinute,
             looping: true,
@@ -90,6 +105,7 @@ class _TimerPickerState extends State<TimerPicker> {
               setState(() {
                 _selectedPeriod = index == 0 ? 'AM' : 'PM';
               });
+              updateDuration();
             },
             initialItem: _selectedPeriod == 'AM' ? 0 : 1,
             looping: false,
