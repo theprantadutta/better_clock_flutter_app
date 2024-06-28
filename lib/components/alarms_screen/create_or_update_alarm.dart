@@ -146,28 +146,28 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
                     // Remove border when the TextField is enabled but not focused
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: kPrimaryColor,
+                        color: kPrimaryColor.withOpacity(0.3),
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     // Remove border when the TextField is focused
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: kPrimaryColor,
+                        color: kPrimaryColor.withOpacity(0.3),
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     // Border when there is an error
                     errorBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Colors.red, // Error color
+                      borderSide: BorderSide(
+                        color: Colors.red.withOpacity(0.3), // Error color
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     // Border when the TextField is focused and there is an error
                     focusedErrorBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Colors.red, // Error color
+                      borderSide: BorderSide(
+                        color: Colors.red.withOpacity(0.3), // Error color
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -179,7 +179,7 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   decoration: BoxDecoration(
-                    border: Border.all(color: kPrimaryColor),
+                    border: Border.all(color: kPrimaryColor.withOpacity(0.3)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -216,7 +216,7 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
                   height: MediaQuery.sizeOf(context).height * 0.06,
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
-                    border: Border.all(color: kPrimaryColor),
+                    border: Border.all(color: kPrimaryColor.withOpacity(0.3)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -246,7 +246,7 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   decoration: BoxDecoration(
-                    border: Border.all(color: kPrimaryColor),
+                    border: Border.all(color: kPrimaryColor.withOpacity(0.3)),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(

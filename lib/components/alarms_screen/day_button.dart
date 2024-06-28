@@ -24,11 +24,13 @@ class DayButton extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
         decoration: BoxDecoration(
           color: isSelected
-              ? kPrimaryColor
+              ? kPrimaryColor.withOpacity(0.8)
               : Theme.of(context).scaffoldBackgroundColor,
           border: isSelected
               ? Border.all(width: 0)
-              : Border.all(color: kPrimaryColor),
+              : Border.all(
+                  color: kPrimaryColor.withOpacity(0.3),
+                ),
           borderRadius: BorderRadius.circular(5),
         ),
         child: Center(

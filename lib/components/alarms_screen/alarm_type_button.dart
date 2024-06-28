@@ -21,7 +21,7 @@ class AlarmTypeButton extends StatelessWidget {
         style: ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(
             ringOnce
-                ? Theme.of(context).primaryColor
+                ? Theme.of(context).primaryColor.withOpacity(0.8)
                 : Theme.of(context).scaffoldBackgroundColor,
           ),
           shape: WidgetStatePropertyAll(
@@ -29,7 +29,7 @@ class AlarmTypeButton extends StatelessWidget {
               side: ringOnce
                   ? BorderSide.none
                   : BorderSide(
-                      color: kPrimaryColor,
+                      color: kPrimaryColor.withOpacity(0.3),
                       width: 1.5,
                     ),
               borderRadius: BorderRadius.circular(30),
