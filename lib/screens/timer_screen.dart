@@ -4,6 +4,7 @@ import 'package:better_clock_flutter_app/components/timer_screen/select_timer.da
 import 'package:flutter/material.dart';
 
 import '../components/timer_screen/timer_picker_widget.dart';
+import '../layouts/main_layout.dart';
 
 const double kTimerClockFontSize = 45;
 
@@ -29,94 +30,96 @@ class _TimerScreenState extends State<TimerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return isRunning
-        ? SelectTimer(
-            countDownDuration: Duration(
-              hours: selectedHour,
-              minutes: selectedMinute,
-              seconds: selectedSecond,
-            ),
-            cancelTimer: () {
-              isRunning = false;
-            },
-          )
-        : Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.4,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TimerPickerWidget(
-                          items: hours,
-                          selectedItem: selectedHour,
-                          onChanged: (value) => setState(
-                            () => selectedHour = value,
-                          ),
-                        ),
-                        const Text(
-                          ":",
-                          style: TextStyle(fontSize: 30),
-                        ),
-                        TimerPickerWidget(
-                          items: minutesAndSeconds,
-                          selectedItem: selectedMinute,
-                          onChanged: (value) => setState(
-                            () => selectedMinute = value,
-                          ),
-                        ),
-                        const Text(
-                          ":",
-                          style: TextStyle(fontSize: 30),
-                        ),
-                        TimerPickerWidget(
-                          items: minutesAndSeconds,
-                          selectedItem: selectedSecond,
-                          onChanged: (value) => setState(
-                            () => selectedSecond = value,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+    return MainLayout(
+      body: isRunning
+          ? SelectTimer(
+              countDownDuration: Duration(
+                hours: selectedHour,
+                minutes: selectedMinute,
+                seconds: selectedSecond,
               ),
-              GestureDetector(
-                onTap: isRunning ? null : startTimer,
-                child: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  radius: 40,
-                  child: const Icon(
-                    Icons.play_arrow_outlined,
-                    size: 50,
-                    color: Colors.white,
+              cancelTimer: () {
+                isRunning = false;
+              },
+            )
+          : Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.4,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TimerPickerWidget(
+                            items: hours,
+                            selectedItem: selectedHour,
+                            onChanged: (value) => setState(
+                              () => selectedHour = value,
+                            ),
+                          ),
+                          const Text(
+                            ":",
+                            style: TextStyle(fontSize: 30),
+                          ),
+                          TimerPickerWidget(
+                            items: minutesAndSeconds,
+                            selectedItem: selectedMinute,
+                            onChanged: (value) => setState(
+                              () => selectedMinute = value,
+                            ),
+                          ),
+                          const Text(
+                            ":",
+                            style: TextStyle(fontSize: 30),
+                          ),
+                          TimerPickerWidget(
+                            items: minutesAndSeconds,
+                            selectedItem: selectedSecond,
+                            onChanged: (value) => setState(
+                              () => selectedSecond = value,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              // ElevatedButton(
-              //   onPressed: isRunning ? null : startTimer,
-              //   child: Icon(Icons.play_arrow, size: 40),
-              //   style: ElevatedButton.styleFrom(
-              //     shape: CircleBorder(),
-              //     padding: EdgeInsets.all(20),
-              //     // primary: Colors.blue, // Button color
-              //     // onPrimary: Colors.black, // Splash color
-              //   ),
-              // ),
-              // if (isRunning)
-              //   Padding(
-              //     padding: const EdgeInsets.all(8.0),
-              //     child: Text(
-              //       '${remainingTime.inHours.toString().padLeft(2, '0')}:${(remainingTime.inMinutes % 60).toString().padLeft(2, '0')}:${(remainingTime.inSeconds % 60).toString().padLeft(2, '0')}',
-              //       style: TextStyle(fontSize: 40, color: Colors.white),
-              //     ),
-              //   ),
-            ],
-          );
+                GestureDetector(
+                  onTap: isRunning ? null : startTimer,
+                  child: CircleAvatar(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    radius: 40,
+                    child: const Icon(
+                      Icons.play_arrow_outlined,
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                // ElevatedButton(
+                //   onPressed: isRunning ? null : startTimer,
+                //   child: Icon(Icons.play_arrow, size: 40),
+                //   style: ElevatedButton.styleFrom(
+                //     shape: CircleBorder(),
+                //     padding: EdgeInsets.all(20),
+                //     // primary: Colors.blue, // Button color
+                //     // onPrimary: Colors.black, // Splash color
+                //   ),
+                // ),
+                // if (isRunning)
+                //   Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: Text(
+                //       '${remainingTime.inHours.toString().padLeft(2, '0')}:${(remainingTime.inMinutes % 60).toString().padLeft(2, '0')}:${(remainingTime.inSeconds % 60).toString().padLeft(2, '0')}',
+                //       style: TextStyle(fontSize: 40, color: Colors.white),
+                //     ),
+                //   ),
+              ],
+            ),
+    );
   }
 
   void startTimer() {

@@ -26,7 +26,7 @@ class FloatingAddButton extends StatelessWidget {
             left: 5,
             right: 12,
           ),
-          height: MediaQuery.sizeOf(context).height * 0.055,
+          height: MediaQuery.sizeOf(context).height * 0.045,
           width: MediaQuery.sizeOf(context).width * 0.4,
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor.withOpacity(0.9),
@@ -37,14 +37,14 @@ class FloatingAddButton extends StatelessWidget {
             children: [
               Icon(
                 iconData,
-                size: 30,
+                size: 25,
                 color: Colors.white,
               ),
               const SizedBox(width: 5),
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),
