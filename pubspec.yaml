@@ -8,11 +8,12 @@ environment:
   sdk: ">=3.4.1 <4.0.0"
 
 lint_staged:
-  'lib/**.dart': dart format -o show lib && dart fix --apply
+  "lib/**.dart": dart format -o show lib && dart fix --apply
 
 dependencies:
   alphabet_list_view: ^1.1.0
   analog_clock: ^0.1.1
+  animate_do: ^3.3.4
   cupertino_icons: ^1.0.6
   flex_color_scheme: ^7.3.1
   flutter:

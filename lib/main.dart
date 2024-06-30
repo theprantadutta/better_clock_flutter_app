@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'navigation/app_navigation.dart';
 
 main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -20,6 +21,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   ThemeMode _themeMode = ThemeMode.system;
+  final FlexScheme _flexScheme = FlexScheme.pinkM3;
 
   void changeTheme(ThemeMode themeMode) {
     setState(() {
@@ -34,11 +36,11 @@ class _MyAppState extends State<MyApp> {
       title: 'Better Clock',
       debugShowCheckedModeBanner: false,
       theme: FlexThemeData.light(
-        scheme: FlexScheme.cyanM3,
+        scheme: _flexScheme,
         useMaterial3: true,
       ),
       darkTheme: FlexThemeData.dark(
-        scheme: FlexScheme.cyanM3,
+        scheme: _flexScheme,
         useMaterial3: true,
       ),
       themeMode: _themeMode,

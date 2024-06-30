@@ -1,8 +1,14 @@
+import 'package:better_clock_flutter_app/services/isar_service.dart';
 import 'package:flutter/material.dart';
 
+import '../../entities/alarm.dart';
+
 class SingleAlarmRow extends StatefulWidget {
+  final Alarm alarm;
+
   const SingleAlarmRow({
     super.key,
+    required this.alarm,
   });
 
   @override
@@ -11,6 +17,47 @@ class SingleAlarmRow extends StatefulWidget {
 
 class _SingleAlarmRowState extends State<SingleAlarmRow> {
   bool alarmOn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      alarmOn = widget.alarm.alarmEnabled;
+    });
+  }
+
+  String formatDurationToTime(int durationMinutes) {
+    // Calculate the total hours and minutes
+    int hours = durationMinutes ~/ 60;
+    int minutes = durationMinutes % 60;
+
+    // Adjust hours for 12-hour format
+    hours = hours % 12;
+    hours =
+        hours == 0 ? 12 : hours; // Convert '0' hours to '12' for AM/PM format
+
+    // Format hours and minutes to two digits
+    String hoursStr = hours.toString().padLeft(2, '0');
+    String minutesStr = minutes.toString().padLeft(2, '0');
+
+    // Return formatted time string
+    return "$hoursStr:$minutesStr";
+  }
+
+  String getAmPmPeriod(int durationMinutes) {
+    // Calculate the total hours
+    int hours = durationMinutes ~/ 60;
+
+    // Determine AM/PM period
+    return hours >= 12 ? "PM" : "AM";
+  }
+
+  onAlarmEnabledChanged(value) async {
+    setState(
+      () => alarmOn = value,
+    );
+    await IsarService().updateAnAlarmEnabled(widget.alarm, value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +72,13 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Column(
+          Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Alarm',
-                style: TextStyle(
+                widget.alarm.title,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -41,16 +88,16 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
                 textBaseline: TextBaseline.alphabetic,
                 children: [
                   Text(
-                    '7:20',
-                    style: TextStyle(
+                    formatDurationToTime(widget.alarm.durationMinutes),
+                    style: const TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(width: 6),
+                  const SizedBox(width: 6),
                   Text(
-                    'AM',
-                    style: TextStyle(
+                    getAmPmPeriod(widget.alarm.durationMinutes),
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                     ),
@@ -58,8 +105,8 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
                 ],
               ),
               Text(
-                'Ring Once',
-                style: TextStyle(
+                widget.alarm.ringOnce ? 'Ring Once' : 'Repeat',
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w300,
                 ),
@@ -70,9 +117,7 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
             scale: 0.8,
             child: Switch.adaptive(
               value: alarmOn,
-              onChanged: (value) => setState(
-                () => alarmOn = value,
-              ),
+              onChanged: onAlarmEnabledChanged,
             ),
           ),
         ],

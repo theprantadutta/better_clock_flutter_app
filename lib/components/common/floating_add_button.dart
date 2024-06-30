@@ -26,7 +26,7 @@ class FloatingAddButton extends StatelessWidget {
             left: 5,
             right: 12,
           ),
-          height: MediaQuery.sizeOf(context).height * 0.045,
+          height: MediaQuery.sizeOf(context).height * 0.05,
           width: MediaQuery.sizeOf(context).width * 0.4,
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor.withOpacity(0.9),

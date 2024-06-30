@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -27,6 +28,39 @@ class IsarService {
       });
       return true;
     } catch (e) {
+      return false;
+    }
+  }
+
+  Stream<List<Alarm>> getAllAlarm() async* {
+    final isar = await openDB();
+    yield* isar.alarms.where().watch(fireImmediately: true);
+  }
+
+  Future<bool> updateAnAlarmEnabled(
+      Alarm currentAlarm, bool alarmEnabled) async {
+    try {
+      final isar = await IsarService().openDB();
+      await isar.writeAsync((isarDb) => isarDb.alarms.put(
+            Alarm(
+              id: currentAlarm.id,
+              alarmEnabled: alarmEnabled,
+              title: currentAlarm.title,
+              ringOnce: currentAlarm.ringOnce,
+              durationMinutes: currentAlarm.durationMinutes,
+              days: currentAlarm.days,
+              ringtone: currentAlarm.ringtone,
+              vibrate: currentAlarm.vibrate,
+              enableSnooze: currentAlarm.enableSnooze,
+              snoozeDurationMinutes: currentAlarm.snoozeDurationMinutes,
+              snoozeTime: currentAlarm.snoozeTime,
+            ),
+          ));
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
       return false;
     }
   }
