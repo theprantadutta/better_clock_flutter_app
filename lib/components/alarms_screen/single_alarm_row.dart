@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:animate_do/animate_do.dart';
 import 'package:better_clock_flutter_app/packages/flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,12 +10,14 @@ import '../../services/isar_service.dart';
 
 class SingleAlarmRow extends StatefulWidget {
   final Alarm alarm;
+  final int index;
   final Future<void> Function() refetch;
 
   const SingleAlarmRow({
     super.key,
     required this.alarm,
     required this.refetch,
+    required this.index,
   });
 
   @override
@@ -77,172 +82,185 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
   @override
   Widget build(BuildContext context) {
     final kPrimaryColor = Theme.of(context).primaryColor;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      height: MediaQuery.sizeOf(context).height * 0.14,
-      decoration: BoxDecoration(
-        color: kPrimaryColor.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.alarm.title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    formatDurationToTime(widget.alarm.durationMinutes),
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                    ),
+    return FadeInUp(
+      duration: Duration(milliseconds: min(widget.index, 5) * 100),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        height: MediaQuery.sizeOf(context).height * 0.14,
+        decoration: BoxDecoration(
+          color: kPrimaryColor.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.alarm.title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
-                  const SizedBox(width: 6),
-                  Text(
-                    getAmPmPeriod(widget.alarm.durationMinutes),
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      formatDurationToTime(widget.alarm.durationMinutes),
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
+                    const SizedBox(width: 6),
+                    Text(
+                      getAmPmPeriod(widget.alarm.durationMinutes),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  widget.alarm.ringOnce ? 'Ring Once' : 'Repeat',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
                   ),
-                ],
-              ),
-              Text(
-                widget.alarm.ringOnce ? 'Ring Once' : 'Repeat',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w300,
                 ),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Transform.scale(
-                scale: 0.8,
-                child: Switch.adaptive(
-                  value: alarmOn,
-                  onChanged: onAlarmEnabledChanged,
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Transform.scale(
+                  scale: 0.8,
+                  child: Switch.adaptive(
+                    value: alarmOn,
+                    onChanged: onAlarmEnabledChanged,
+                  ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return Center(
-                        child: Container(
-                          height: MediaQuery.sizeOf(context).height * 0.15,
-                          width: MediaQuery.sizeOf(context).width * 0.9,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Are you sure?',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Center(
+                          child: FadeInUp(
+                            duration: const Duration(milliseconds: 300),
+                            child: Container(
+                              height: MediaQuery.sizeOf(context).height * 0.15,
+                              width: MediaQuery.sizeOf(context).width * 0.9,
+                              decoration: BoxDecoration(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                borderRadius: BorderRadius.circular(15),
                               ),
-                              const SizedBox(height: 15),
-                              Row(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Expanded(
-                                    child: OutlinedButton(
-                                      onPressed: deleteAlarm,
-                                      style: OutlinedButton.styleFrom(
-                                        side: BorderSide(
-                                          color: kPrimaryColor,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          'Yes',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ),
+                                  const Text(
+                                    'Are you sure?',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                   ),
-                                  const SizedBox(width: 50),
-                                  Expanded(
-                                    child: OutlinedButton(
-                                      onPressed: () => context.pop(),
-                                      style: OutlinedButton.styleFrom(
-                                        side: BorderSide(
-                                          color: kPrimaryColor,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                      ),
-                                      child: const Center(
-                                        child: Text(
-                                          'No',
-                                          style: TextStyle(
-                                            fontSize: 20,
+                                  const SizedBox(height: 15),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: OutlinedButton(
+                                          onPressed: deleteAlarm,
+                                          style: OutlinedButton.styleFrom(
+                                            side: BorderSide(
+                                              color: kPrimaryColor,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                              'Yes',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 1.2,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
+                                      const SizedBox(width: 50),
+                                      Expanded(
+                                        child: OutlinedButton(
+                                          onPressed: () => context.pop(),
+                                          style: OutlinedButton.styleFrom(
+                                            side: BorderSide(
+                                              color: kPrimaryColor,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                          child: const Center(
+                                            child: Text(
+                                              'No',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                                letterSpacing: 1.2,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                },
-                child: Container(
-                  height: MediaQuery.sizeOf(context).height * 0.04,
-                  width: MediaQuery.sizeOf(context).width * 0.18,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: kPrimaryColor.withOpacity(0.6),
+                        );
+                      },
+                    );
+                  },
+                  child: Container(
+                    height: MediaQuery.sizeOf(context).height * 0.04,
+                    width: MediaQuery.sizeOf(context).width * 0.18,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: kPrimaryColor.withOpacity(0.6),
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Delete',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
+                    child: const Center(
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

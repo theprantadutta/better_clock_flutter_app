@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 class AlarmScreenTitle extends StatelessWidget {
@@ -10,22 +11,28 @@ class AlarmScreenTitle extends StatelessWidget {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.09,
       width: MediaQuery.sizeOf(context).width,
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            'Alarms',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
+          FadeInUp(
+            duration: const Duration(milliseconds: 200),
+            child: const Text(
+              'Alarms',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-          Text(
-            'Next Alarm in 22 Hours 2 minutes',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w300,
+          FadeInUp(
+            duration: const Duration(milliseconds: 400),
+            child: const Text(
+              'Next Alarm in 22 Hours 2 minutes',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w300,
+              ),
             ),
           ),
         ],

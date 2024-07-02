@@ -1,7 +1,7 @@
-import 'package:better_clock_flutter_app/services/isar_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/common/cached_future_handler.dart';
+import '../../services/isar_service.dart';
 import '../common/floating_add_button.dart';
 import 'create_or_update_alarm.dart';
 import 'single_alarm_row.dart';
@@ -37,6 +37,7 @@ class _AlarmsListState extends State<AlarmsList> {
                   return SingleAlarmRow(
                     alarm: alarms[index],
                     refetch: refetch,
+                    index: index,
                   );
                 },
               ),

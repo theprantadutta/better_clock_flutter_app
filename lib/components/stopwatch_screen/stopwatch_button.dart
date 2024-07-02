@@ -18,7 +18,7 @@ class StopwatchButton extends StatelessWidget {
         height: MediaQuery.sizeOf(context).height * 0.05,
         width: MediaQuery.sizeOf(context).width * 0.2,
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(0.6),
+          color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
