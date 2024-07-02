@@ -1,17 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 const defaultValue = 56.0;
 
 class Loader extends StatelessWidget {
   static OverlayEntry? _currentLoader;
 
-  const Loader._(this._progressIndicator, this._themeData);
-
-  final Widget? _progressIndicator;
-  final ThemeData? _themeData;
-
   static OverlayState? _overlayState;
+
+  const Loader({super.key});
 
   /// If you need to check your loader is being shown or
   /// not just call the property ```Loader.isShown'''
@@ -81,27 +79,27 @@ class Loader extends StatelessWidget {
       final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
 
       ///Create current Loader Entry
-      _currentLoader = OverlayEntry(builder: (context) {
-        return Stack(
-          children: <Widget>[
-            _overlayWidget(
-                isSafeAreaOverlay,
-                overlayColor ??
-                    (isDarkTheme
-                        ? Colors.black.withOpacity(0.4)
-                        : Colors.white.withOpacity(0.4)),
-                isAppbarOverlay ? 0.0 : overlayFromTop ?? defaultPaddingTop,
-                isBottomBarOverlay
-                    ? 0.0
-                    : overlayFromBottom ?? defaultPaddingBottom),
-            Center(
-                child: Loader._(
-              progressIndicator,
-              themeData,
-            )),
-          ],
-        );
-      });
+      _currentLoader = OverlayEntry(
+        builder: (context) {
+          return Stack(
+            children: <Widget>[
+              _overlayWidget(
+                  isSafeAreaOverlay,
+                  overlayColor ??
+                      (isDarkTheme
+                          ? Colors.black.withOpacity(0.4)
+                          : Colors.white.withOpacity(0.4)),
+                  isAppbarOverlay ? 0.0 : overlayFromTop ?? defaultPaddingTop,
+                  isBottomBarOverlay
+                      ? 0.0
+                      : overlayFromBottom ?? defaultPaddingBottom),
+              const Center(
+                child: Loader(),
+              ),
+            ],
+          );
+        },
+      );
 
       try {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -166,16 +164,9 @@ class Loader extends StatelessWidget {
         // return false;
       },
       child: Center(
-        child: Theme(
-          data: _themeData ??
-              Theme.of(context).copyWith(
-                colorScheme:
-                    ColorScheme.fromSwatch().copyWith(secondary: kPrimaryColor),
-              ),
-          child: _progressIndicator ??
-              CircularProgressIndicator(
-                color: kPrimaryColor,
-              ),
+        child: LoadingAnimationWidget.dotsTriangle(
+          color: kPrimaryColor,
+          size: 40,
         ),
       ),
     );

@@ -19,8 +19,10 @@ const kFriDay = 'FRI';
 const kSatDay = 'SAT';
 
 class CreateOrUpdateAlarm extends StatefulWidget {
+  final Future<void> Function() refetch;
   const CreateOrUpdateAlarm({
     super.key,
+    required this.refetch,
   });
 
   @override
@@ -63,7 +65,10 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
       snoozeTime: snoozeTimes,
     );
     await IsarService().createAlarm(alarm);
-    Loader.hide();
+    await widget.refetch();
+    Future.delayed(Duration.zero, () {
+      Loader.hide();
+    });
     // ignore: use_build_context_synchronously
     return context.pop();
   }

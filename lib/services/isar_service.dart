@@ -32,9 +32,14 @@ class IsarService {
     }
   }
 
-  Stream<List<Alarm>> getAllAlarm() async* {
+  Future<List<Alarm>> getAllAlarm() async {
     final isar = await openDB();
-    yield* isar.alarms.where().watch(fireImmediately: true);
+    return isar.alarms.where().findAllAsync();
+  }
+
+  Stream<void> watchAlarmChange() async* {
+    final isar = await openDB();
+    yield isar.alarms.watchLazy(fireImmediately: true);
   }
 
   Future<bool> updateAnAlarmEnabled(
@@ -56,6 +61,19 @@ class IsarService {
               snoozeTime: currentAlarm.snoozeTime,
             ),
           ));
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return false;
+    }
+  }
+
+  Future<bool> deleteAnAlarm(int id) async {
+    try {
+      final isar = await openDB();
+      await isar.writeAsync((isarDb) => isarDb.alarms.delete(id));
       return true;
     } catch (e) {
       if (kDebugMode) {

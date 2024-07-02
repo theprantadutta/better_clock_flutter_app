@@ -1,11 +1,19 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:fquery/fquery.dart';
 
 import 'navigation/app_navigation.dart';
 
+final queryClient = QueryClient();
+
 main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(
+    QueryClientProvider(
+      queryClient: queryClient,
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -21,7 +29,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   ThemeMode _themeMode = ThemeMode.system;
-  final FlexScheme _flexScheme = FlexScheme.pinkM3;
+  final FlexScheme _flexScheme = FlexScheme.bahamaBlue;
 
   void changeTheme(ThemeMode themeMode) {
     setState(() {

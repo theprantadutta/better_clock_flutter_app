@@ -1,14 +1,18 @@
-import 'package:better_clock_flutter_app/services/isar_service.dart';
+import 'package:better_clock_flutter_app/packages/flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../entities/alarm.dart';
+import '../../services/isar_service.dart';
 
 class SingleAlarmRow extends StatefulWidget {
   final Alarm alarm;
+  final Future<void> Function() refetch;
 
   const SingleAlarmRow({
     super.key,
     required this.alarm,
+    required this.refetch,
   });
 
   @override
@@ -59,14 +63,26 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
     await IsarService().updateAnAlarmEnabled(widget.alarm, value);
   }
 
+  Future<void> deleteAlarm() async {
+    Loader.show(context);
+    await IsarService().deleteAnAlarm(widget.alarm.id);
+    await widget.refetch();
+    Future.delayed(Duration.zero, () {
+      Loader.hide();
+    });
+    // ignore: use_build_context_synchronously
+    context.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final kPrimaryColor = Theme.of(context).primaryColor;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       margin: const EdgeInsets.symmetric(vertical: 5),
       height: MediaQuery.sizeOf(context).height * 0.14,
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor.withOpacity(0.05),
+        color: kPrimaryColor.withOpacity(0.05),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
@@ -113,12 +129,118 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
               ),
             ],
           ),
-          Transform.scale(
-            scale: 0.8,
-            child: Switch.adaptive(
-              value: alarmOn,
-              onChanged: onAlarmEnabledChanged,
-            ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Transform.scale(
+                scale: 0.8,
+                child: Switch.adaptive(
+                  value: alarmOn,
+                  onChanged: onAlarmEnabledChanged,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Center(
+                        child: Container(
+                          height: MediaQuery.sizeOf(context).height * 0.15,
+                          width: MediaQuery.sizeOf(context).width * 0.9,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Are you sure?',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: deleteAlarm,
+                                      style: OutlinedButton.styleFrom(
+                                        side: BorderSide(
+                                          color: kPrimaryColor,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          'Yes',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 50),
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: () => context.pop(),
+                                      style: OutlinedButton.styleFrom(
+                                        side: BorderSide(
+                                          color: kPrimaryColor,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          'No',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                  height: MediaQuery.sizeOf(context).height * 0.04,
+                  width: MediaQuery.sizeOf(context).width * 0.18,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: kPrimaryColor.withOpacity(0.6),
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
