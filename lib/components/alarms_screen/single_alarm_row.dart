@@ -83,7 +83,7 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
   Widget build(BuildContext context) {
     final kPrimaryColor = Theme.of(context).primaryColor;
     return FadeInUp(
-      duration: Duration(milliseconds: min(widget.index, 5) * 100),
+      duration: Duration(milliseconds: min(widget.index + 1, 5) * 100),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         margin: const EdgeInsets.symmetric(vertical: 5),

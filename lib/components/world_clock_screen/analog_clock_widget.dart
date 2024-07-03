@@ -1,4 +1,5 @@
 import 'package:analog_clock/analog_clock.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 class AnalogClockWidget extends StatelessWidget {
@@ -7,12 +8,15 @@ class AnalogClockWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
-    return SizedBox(
-      height: MediaQuery.sizeOf(context).height * 0.3,
-      width: MediaQuery.sizeOf(context).width * 0.7,
-      child: isDarkTheme
-          ? const DarkAnalogClockWidget()
-          : const LightAnalogClockWidget(),
+    return ZoomIn(
+      duration: const Duration(milliseconds: 300),
+      child: SizedBox(
+        height: MediaQuery.sizeOf(context).height * 0.3,
+        width: MediaQuery.sizeOf(context).width * 0.7,
+        child: isDarkTheme
+            ? const DarkAnalogClockWidget()
+            : const LightAnalogClockWidget(),
+      ),
     );
   }
 }

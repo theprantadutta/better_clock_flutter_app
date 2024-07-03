@@ -1,7 +1,10 @@
+import 'package:better_clock_flutter_app/components/alarms_screen/alarms_list.dart';
+import 'package:better_clock_flutter_app/entities/world_clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../components/world_clock_screen/clock_lists.dart';
 import '../entities/alarm.dart';
 
 class IsarService {
@@ -15,7 +18,7 @@ class IsarService {
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();
     return Isar.open(
-      schemas: [AlarmSchema],
+      schemas: [AlarmSchema, WorldClockSchema],
       directory: dir.path,
     );
   }
@@ -34,7 +37,12 @@ class IsarService {
 
   Future<List<Alarm>> getAllAlarm() async {
     final isar = await openDB();
-    return isar.alarms.where().findAllAsync();
+    final allAlarms = await isar.alarms.where().findAllAsync();
+    if (allAlarms.isEmpty) {
+      await isar.writeAsync((isarDb) => isarDb.alarms.putAll(initialAlarms));
+      return initialAlarms;
+    }
+    return allAlarms;
   }
 
   Stream<void> watchAlarmChange() async* {
@@ -80,6 +88,18 @@ class IsarService {
         print(e);
       }
       return false;
+    }
+  }
+
+  Future<List<WorldClock>> getInitialWorldClock() async {
+    final isar = await IsarService().openDB();
+    final worldClocks = await isar.worldClocks.where().findAllAsync();
+    if (worldClocks.isEmpty) {
+      await isar
+          .writeAsync((isarDb) => isarDb.worldClocks.putAll(initialClocks));
+      return initialClocks;
+    } else {
+      return worldClocks;
     }
   }
 }

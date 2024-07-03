@@ -1,10 +1,50 @@
 import 'package:flutter/material.dart';
 
 import '../../components/common/cached_future_handler.dart';
+import '../../entities/alarm.dart';
 import '../../services/isar_service.dart';
 import '../common/floating_add_button.dart';
 import 'create_or_update_alarm.dart';
 import 'single_alarm_row.dart';
+
+List<Alarm> initialAlarms = [
+  Alarm(
+      id: 1,
+      alarmEnabled: false,
+      title: 'Morning',
+      ringOnce: true,
+      durationMinutes: 420,
+      days: [],
+      ringtone: 'default',
+      vibrate: true,
+      enableSnooze: true,
+      snoozeDurationMinutes: 5,
+      snoozeTime: 2),
+  Alarm(
+      id: 2,
+      alarmEnabled: false,
+      title: 'Morning 2',
+      ringOnce: true,
+      durationMinutes: 420,
+      days: [],
+      ringtone: 'default',
+      vibrate: true,
+      enableSnooze: true,
+      snoozeDurationMinutes: 5,
+      snoozeTime: 2),
+  Alarm(
+      id: 3,
+      alarmEnabled: false,
+      title: 'Reading',
+      ringOnce: true,
+      durationMinutes: 420,
+      days: [],
+      ringtone: 'default',
+      vibrate: true,
+      enableSnooze: true,
+      snoozeDurationMinutes: 5,
+      snoozeTime: 2)
+];
 
 class AlarmsList extends StatefulWidget {
   const AlarmsList({super.key});
