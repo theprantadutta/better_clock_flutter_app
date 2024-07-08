@@ -1,10 +1,10 @@
-import 'package:better_clock_flutter_app/components/world_clock_screen/clock_lists.dart';
-import 'package:better_clock_flutter_app/layouts/main_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../components/world_clock_screen/analog_clock_widget.dart';
+import '../components/world_clock_screen/clock_lists.dart';
+import '../layouts/main_layout.dart';
 
 class WorldClockScreen extends StatelessWidget {
   static const kRouteName = '/world-clock';
@@ -58,7 +58,9 @@ class WorldClockScreen extends StatelessWidget {
                     ?.withOpacity(0.5),
               ),
             ),
-            SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
+            SizedBox(
+              height: MediaQuery.sizeOf(context).height * 0.04,
+            ),
             const ClockLists(),
           ],
         ),

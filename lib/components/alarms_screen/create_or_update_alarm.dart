@@ -71,7 +71,7 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
     Loader.show(context);
     final isar = await IsarService().openDB();
     final alarm = Alarm(
-      id: isar.alarms.autoIncrement(),
+      id: widget.alarm == null ? isar.alarms.autoIncrement() : widget.alarm!.id,
       alarmEnabled: true,
       title: alarmTitle.isEmpty ? 'Alarm' : alarmTitle,
       durationMinutes: alarmTime.inMinutes,
