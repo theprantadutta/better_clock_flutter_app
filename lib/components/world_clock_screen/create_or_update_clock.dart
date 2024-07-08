@@ -1,11 +1,54 @@
 import 'package:alphabet_list_view/alphabet_list_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-class CreateOrUpdateClock extends StatelessWidget {
-  const CreateOrUpdateClock({super.key});
+import '../../packages/flutter_overlay_loader/flutter_overlay_loader.dart';
+import '../../services/isar_service.dart';
+
+class CreateOrUpdateClock extends StatefulWidget {
+  final Future<void> Function() refetch;
+
+  const CreateOrUpdateClock({
+    super.key,
+    required this.refetch,
+  });
+
+  @override
+  State<CreateOrUpdateClock> createState() => _CreateOrUpdateClockState();
+}
+
+class _CreateOrUpdateClockState extends State<CreateOrUpdateClock> {
+  String searchTerm = '';
+  List<AlphabetListViewItemGroup> theAlphabeticList = [];
+
+  Future<void> addAWorldClock({
+    required String cityName,
+    required String timeZone,
+    required bool isCurrentTimeZone,
+  }) async {
+    Loader.show(context);
+    final result = await IsarService().createNewClock(
+      city: cityName,
+      timeZone: timeZone,
+      isCurrentTimeZone: false,
+    );
+    if (kDebugMode) {
+      print('Result: $result');
+    }
+    await widget.refetch();
+    Loader.hide();
+    // ignore: use_build_context_synchronously
+    context.pop();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    theAlphabeticList = getAllTimeZones(searchTerm);
+  }
 
   String formatOffset(tz.Location location) {
     final now = tz.TZDateTime.now(location);
@@ -16,7 +59,7 @@ class CreateOrUpdateClock extends StatelessWidget {
     return 'GMT$sign${hours.abs().toString().padLeft(2, '0')}:${minutes.abs().toString().padLeft(2, '0')}';
   }
 
-  List<AlphabetListViewItemGroup> getAllTimeZones(BuildContext context) {
+  List<AlphabetListViewItemGroup> getAllTimeZones(String searchTerm) {
     final kPrimaryColor = Theme.of(context).primaryColor;
 
     tz.initializeTimeZones();
@@ -28,10 +71,15 @@ class CreateOrUpdateClock extends StatelessWidget {
     locations.forEach((key, location) {
       String cityName = location.name.split('/').last; // Extract city name
       String firstLetter = cityName[0].toUpperCase();
-      if (!groupedCities.containsKey(firstLetter)) {
-        groupedCities[firstLetter] = [];
+
+      // Check if the city name contains the search term (case-insensitive)
+      if (searchTerm.isEmpty ||
+          cityName.toLowerCase().contains(searchTerm.toLowerCase())) {
+        if (!groupedCities.containsKey(firstLetter)) {
+          groupedCities[firstLetter] = [];
+        }
+        groupedCities[firstLetter]!.add(location);
       }
-      groupedCities[firstLetter]!.add(location);
     });
 
     // Create the final list of AlphabetListViewItemGroup
@@ -44,34 +92,41 @@ class CreateOrUpdateClock extends StatelessWidget {
           children: cities.map((location) {
             String cityName = location.name.split('/').last;
             String offset = formatOffset(location);
-            return Container(
-              height: MediaQuery.sizeOf(context).height * 0.08,
-              margin: const EdgeInsets.only(top: 5, right: 5),
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              decoration: BoxDecoration(
-                color: kPrimaryColor.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(15),
+            return GestureDetector(
+              onTap: () => addAWorldClock(
+                cityName: cityName,
+                timeZone: location.toString(),
+                isCurrentTimeZone: false,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    cityName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1,
+              child: Container(
+                height: MediaQuery.sizeOf(context).height * 0.08,
+                margin: const EdgeInsets.only(top: 5, right: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                decoration: BoxDecoration(
+                  color: kPrimaryColor.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      cityName,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                      ),
                     ),
-                  ),
-                  Text(
-                    offset,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w100,
+                    Text(
+                      offset,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w100,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }).toList(),
@@ -191,6 +246,12 @@ class CreateOrUpdateClock extends StatelessWidget {
               print('onTapOutside');
               FocusManager.instance.primaryFocus?.unfocus();
             },
+            onChanged: (value) {
+              setState(() {
+                searchTerm = value;
+                theAlphabeticList = getAllTimeZones(value);
+              });
+            },
             decoration: InputDecoration(
               hintText: 'Search City...',
               hintStyle: const TextStyle(
@@ -235,7 +296,7 @@ class CreateOrUpdateClock extends StatelessWidget {
             height: MediaQuery.sizeOf(context).height * 0.75,
             margin: const EdgeInsets.symmetric(vertical: 10),
             child: AlphabetListView(
-              items: getAllTimeZones(context),
+              items: theAlphabeticList,
               options: _alphabetListViewOptions(context),
             ),
           ),

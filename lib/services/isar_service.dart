@@ -1,11 +1,11 @@
-import 'package:better_clock_flutter_app/components/alarms_screen/alarms_list.dart';
-import 'package:better_clock_flutter_app/entities/world_clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../components/alarms_screen/alarms_list.dart';
 import '../components/world_clock_screen/clock_lists.dart';
 import '../entities/alarm.dart';
+import '../entities/world_clock.dart';
 
 class IsarService {
   late Future<Isar> db;
@@ -27,7 +27,7 @@ class IsarService {
     try {
       final isar = await openDB();
       await isar.writeAsync((isarDb) {
-        isarDb.alarms.put(alarm); // insert & update
+        isarDb.alarms.put(alarm);
       });
       return true;
     } catch (e) {
@@ -91,15 +91,56 @@ class IsarService {
     }
   }
 
+  Future<bool> deleteAClock(int id) async {
+    try {
+      final isar = await openDB();
+      await isar.writeAsync((isarDb) => isarDb.worldClocks.delete(id));
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return false;
+    }
+  }
+
   Future<List<WorldClock>> getInitialWorldClock() async {
     final isar = await IsarService().openDB();
     final worldClocks = await isar.worldClocks.where().findAllAsync();
     if (worldClocks.isEmpty) {
-      await isar
-          .writeAsync((isarDb) => isarDb.worldClocks.putAll(initialClocks));
+      await isar.writeAsync(
+        (isarDb) => isarDb.worldClocks.putAll(initialClocks),
+      );
       return initialClocks;
     } else {
       return worldClocks;
+    }
+  }
+
+  Future<bool> createNewClock({
+    required String city,
+    required String timeZone,
+    required bool isCurrentTimeZone,
+  }) async {
+    try {
+      final isar = await openDB();
+      final existingCity =
+          await isar.worldClocks.where().cityEqualTo(city).findFirstAsync();
+      if (existingCity != null) return false;
+      isar.write(
+        (isarDb) => isarDb.worldClocks.put(
+          WorldClock(
+            id: isar.worldClocks.autoIncrement(),
+            city: city,
+            timeZone: timeZone,
+            isCurrentTimeZone: isCurrentTimeZone,
+          ),
+        ),
+      );
+      return true;
+    } catch (e) {
+      if (kDebugMode) print(e);
+      return false;
     }
   }
 }

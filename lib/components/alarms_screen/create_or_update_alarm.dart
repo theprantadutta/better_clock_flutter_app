@@ -20,9 +20,12 @@ const kSatDay = 'SAT';
 
 class CreateOrUpdateAlarm extends StatefulWidget {
   final Future<void> Function() refetch;
+  final Alarm? alarm;
+
   const CreateOrUpdateAlarm({
     super.key,
     required this.refetch,
+    this.alarm,
   });
 
   @override
@@ -38,6 +41,22 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
   int snoozeTimes = 3;
   bool enableSnooze = true;
   List<String> dayList = [];
+
+  @override
+  void initState() {
+    setState(() {
+      ringOnce = widget.alarm?.ringOnce ?? true;
+      shouldVibrate = widget.alarm?.vibrate ?? true;
+      alarmTime = Duration(minutes: widget.alarm?.durationMinutes ?? 420);
+      alarmTitle = widget.alarm?.title ?? '';
+      snoozeDuration =
+          Duration(minutes: widget.alarm?.snoozeDurationMinutes ?? 420);
+      snoozeTimes = widget.alarm?.snoozeTime ?? 3;
+      enableSnooze = widget.alarm?.enableSnooze ?? true;
+      dayList = widget.alarm?.days ?? [];
+    });
+    super.initState();
+  }
 
   void addOrRemoveDays(String value) {
     if (dayList.contains(value)) {
