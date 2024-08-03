@@ -1,9 +1,10 @@
-import 'package:better_clock_flutter_app/packages/flutter_overlay_loader/flutter_overlay_loader.dart';
-import 'package:better_clock_flutter_app/services/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../constants/selectors.dart';
 import '../../entities/alarm.dart';
+import '../../packages/flutter_overlay_loader/flutter_overlay_loader.dart';
+import '../../services/isar_service.dart';
 import 'alarm_snooze.dart';
 import 'alarm_type_button.dart';
 import 'day_button.dart';
@@ -37,6 +38,7 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
   bool shouldVibrate = true;
   Duration alarmTime = const Duration(minutes: 420);
   String alarmTitle = '';
+  String alarmRingtone = kDefaultRingtone;
   Duration snoozeDuration = const Duration(minutes: 5);
   int snoozeTimes = 3;
   bool enableSnooze = true;
@@ -49,6 +51,7 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
       shouldVibrate = widget.alarm?.vibrate ?? true;
       alarmTime = Duration(minutes: widget.alarm?.durationMinutes ?? 420);
       alarmTitle = widget.alarm?.title ?? '';
+      alarmRingtone = widget.alarm?.ringtone ?? alarmRingtone;
       snoozeDuration =
           Duration(minutes: widget.alarm?.snoozeDurationMinutes ?? 420);
       snoozeTimes = widget.alarm?.snoozeTime ?? 3;
@@ -77,7 +80,7 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
       durationMinutes: alarmTime.inMinutes,
       ringOnce: ringOnce,
       days: dayList,
-      ringtone: 'Default',
+      ringtone: alarmRingtone,
       vibrate: shouldVibrate,
       enableSnooze: enableSnooze,
       snoozeDurationMinutes: snoozeDuration.inMinutes,
@@ -112,9 +115,9 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
                   onPressed: () => context.pop(),
                   icon: const Icon(Icons.close_outlined),
                 ),
-                const Text(
-                  'Add an Alarm',
-                  style: TextStyle(
+                Text(
+                  widget.alarm == null ? 'Add an Alarm' : 'Update Alarm',
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                   ),
@@ -128,8 +131,9 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
           ),
           TimerPicker(
             initialDuration: alarmTime,
-            addOrUpdateAlarm: (duration) =>
-                setState(() => alarmTime = duration),
+            addOrUpdateAlarm: (duration) => setState(
+              () => alarmTime = duration,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -139,13 +143,17 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
                 AlarmTypeButton(
                   ringOnce: ringOnce,
                   title: 'Ring Once',
-                  onPressed: () => setState(() => ringOnce = !ringOnce),
+                  onPressed: () => setState(
+                    () => ringOnce = !ringOnce,
+                  ),
                 ),
                 const SizedBox(width: 10),
                 AlarmTypeButton(
                   ringOnce: !ringOnce,
                   title: 'Custom',
-                  onPressed: () => setState(() => ringOnce = !ringOnce),
+                  onPressed: () => setState(
+                    () => ringOnce = !ringOnce,
+                  ),
                 ),
               ],
             ),
@@ -232,7 +240,8 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
             // height: MediaQuery.sizeOf(context).height * 0.25,
             child: Column(
               children: [
-                TextField(
+                TextFormField(
+                  initialValue: alarmTitle,
                   onChanged: (value) => alarmTitle = value,
                   onTapOutside: (event) {
                     // print('onTapOutside');
@@ -280,19 +289,29 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    showModalBottomSheet(
+                    String? poppedRingtone = await showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
                       builder: (context) {
-                        return const RingtoneList();
+                        return RingtoneList(
+                          selectedRingtone: alarmRingtone,
+                        );
                       },
                     );
+                    debugPrint('Currently poppedRingtone: $poppedRingtone');
+                    if (poppedRingtone != null) {
+                      setState(
+                        () => alarmRingtone = poppedRingtone,
+                      );
+                    }
                   },
                   child: Container(
                     height: MediaQuery.sizeOf(context).height * 0.08,
                     margin: const EdgeInsets.symmetric(vertical: 10),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: kPrimaryColor.withOpacity(0.3)),
                       borderRadius: BorderRadius.circular(10),
@@ -314,7 +333,7 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              'Default (I Don\'t Know)',
+                              alarmRingtone,
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
