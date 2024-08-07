@@ -50,25 +50,34 @@ class IsarService {
     yield isar.alarms.watchLazy(fireImmediately: true);
   }
 
+  Future<Alarm?> getAlarmById(int alarmId) async {
+    final isar = await openDB();
+    return await isar.alarms.where().idEqualTo(alarmId).findFirstAsync();
+  }
+
   Future<bool> updateAnAlarmEnabled(
-      Alarm currentAlarm, bool alarmEnabled) async {
+    Alarm currentAlarm,
+    bool alarmEnabled,
+  ) async {
     try {
       final isar = await IsarService().openDB();
-      await isar.writeAsync((isarDb) => isarDb.alarms.put(
-            Alarm(
-              id: currentAlarm.id,
-              alarmEnabled: alarmEnabled,
-              title: currentAlarm.title,
-              ringOnce: currentAlarm.ringOnce,
-              durationMinutes: currentAlarm.durationMinutes,
-              days: currentAlarm.days,
-              ringtone: currentAlarm.ringtone,
-              vibrate: currentAlarm.vibrate,
-              enableSnooze: currentAlarm.enableSnooze,
-              snoozeDurationMinutes: currentAlarm.snoozeDurationMinutes,
-              snoozeTime: currentAlarm.snoozeTime,
-            ),
-          ));
+      await isar.writeAsync(
+        (isarDb) => isarDb.alarms.put(
+          Alarm(
+            id: currentAlarm.id,
+            alarmEnabled: alarmEnabled,
+            title: currentAlarm.title,
+            ringOnce: currentAlarm.ringOnce,
+            durationMinutes: currentAlarm.durationMinutes,
+            days: currentAlarm.days,
+            ringtone: currentAlarm.ringtone,
+            vibrate: currentAlarm.vibrate,
+            enableSnooze: currentAlarm.enableSnooze,
+            snoozeDurationMinutes: currentAlarm.snoozeDurationMinutes,
+            snoozeTime: currentAlarm.snoozeTime,
+          ),
+        ),
+      );
       return true;
     } catch (e) {
       if (kDebugMode) {

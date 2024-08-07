@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:alarm/alarm.dart' as alarm_lib;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -70,7 +73,7 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
     setState(() {});
   }
 
-  Future<void> addAnAlarm() async {
+  Future<void> addOrUpdateAnAlarm() async {
     Loader.show(context);
     final isar = await IsarService().openDB();
     final alarm = Alarm(
@@ -88,11 +91,111 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
     );
     await IsarService().createAlarm(alarm);
     await widget.refetch();
+    if (alarm.days == null || (alarm.days != null && alarm.days!.isEmpty)) {
+      DateTime now = DateTime.now();
+      var selectedDateTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ).add(
+        Duration(
+          minutes: alarm.durationMinutes,
+        ),
+      );
+      if (selectedDateTime.isBefore(now)) {
+        selectedDateTime = selectedDateTime.add(const Duration(days: 1));
+      }
+      final alarmSettings = alarm_lib.AlarmSettings(
+        id: alarm.id,
+        dateTime: selectedDateTime,
+        assetAudioPath: 'assets/ringtones/${alarm.ringtone}',
+        loopAudio: true,
+        vibrate: alarm.vibrate,
+        volume: 0.8,
+        fadeDuration: 3.0,
+        notificationTitle: alarm.title,
+        notificationBody: '${alarm.title} is Now active.',
+        enableNotificationOnKill: Platform.isIOS,
+      );
+      await alarm_lib.Alarm.set(alarmSettings: alarmSettings);
+    } else {
+      for (String day in alarm.days!) {
+        int daysOffset = _getDaysOffset(day);
+        if (daysOffset == -1) continue;
+        DateTime now = DateTime.now();
+        DateTime selectedDateTime = DateTime(
+          now.year,
+          now.month,
+          now.day,
+        ).add(
+          Duration(
+            minutes: alarm.durationMinutes,
+            days: daysOffset,
+          ),
+        );
+
+        if (selectedDateTime.isBefore(now)) {
+          selectedDateTime = selectedDateTime.add(const Duration(days: 7));
+        }
+
+        final alarmSettings = alarm_lib.AlarmSettings(
+          id: alarm.id,
+          dateTime: selectedDateTime,
+          assetAudioPath: 'assets/ringtones/${alarm.ringtone}',
+          loopAudio: true,
+          vibrate: alarm.vibrate,
+          volume: 0.8,
+          fadeDuration: 3.0,
+          notificationTitle: alarm.title,
+          notificationBody: '${alarm.title} is Now active.',
+          enableNotificationOnKill: Platform.isIOS,
+        );
+
+        await alarm_lib.Alarm.set(alarmSettings: alarmSettings);
+      }
+    }
     Future.delayed(Duration.zero, () {
       Loader.hide();
     });
     // ignore: use_build_context_synchronously
     return context.pop();
+  }
+
+  int _getDaysOffset(String day) {
+    int today = DateTime.now().weekday;
+    int targetDay;
+
+    switch (day) {
+      case 'SUN':
+        targetDay = DateTime.sunday;
+        break;
+      case 'MON':
+        targetDay = DateTime.monday;
+        break;
+      case 'TUE':
+        targetDay = DateTime.tuesday;
+        break;
+      case 'WED':
+        targetDay = DateTime.wednesday;
+        break;
+      case 'THU':
+        targetDay = DateTime.thursday;
+        break;
+      case 'FRI':
+        targetDay = DateTime.friday;
+        break;
+      case 'SAT':
+        targetDay = DateTime.saturday;
+        break;
+      default:
+        return -1;
+    }
+
+    if (targetDay >= today) {
+      return targetDay - today;
+    } else {
+      return 7 - (today - targetDay);
+    }
   }
 
   @override
@@ -123,7 +226,7 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
                   ),
                 ),
                 IconButton(
-                  onPressed: addAnAlarm,
+                  onPressed: addOrUpdateAnAlarm,
                   icon: const Icon(Icons.check_outlined),
                 ),
               ],

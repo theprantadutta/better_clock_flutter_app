@@ -1,3 +1,4 @@
+import 'package:alarm/alarm.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:fquery/fquery.dart';
@@ -5,14 +6,13 @@ import 'package:timezone/data/latest.dart' as tz;
 
 import 'navigation/app_navigation.dart';
 
-final queryClient = QueryClient();
-
-main() {
+main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones(); // Initialize time zones
+  await Alarm.init();
   runApp(
     QueryClientProvider(
-      queryClient: queryClient,
+      queryClient: QueryClient(),
       child: const MyApp(),
     ),
   );

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../screen_arguments/ring_screen_arguments.dart';
 import '../screens/alarms_screen.dart';
+import '../screens/ring_screen.dart';
 import '../screens/stopwatch_screen.dart';
 import '../screens/timer_screen.dart';
 import '../screens/world_clock_screen.dart';
@@ -94,16 +96,18 @@ class AppNavigation {
         ],
       ),
 
-      /// Directory
-      // GoRoute(
-      //   parentNavigatorKey: _rootNavigatorKey,
-      //   path: DirectoryScreen.route,
-      //   name: "Directory",
-      //   builder: (context, state) => DirectoryScreen(
-      //     key: state.pageKey,
-      //   ),
-      // ),
+      /// Ring Screen
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: RingScreen.kRouteName,
+        name: "Ring",
+        builder: (context, state) {
+          final args = state.extra as RingScreenArguments;
+          return RingScreen(alarmSettings: args.alarmSettings);
+        },
+      ),
     ],
+    extraCodec: const MyExtraCodec(),
   );
 
   static CustomTransitionPage<void> reusableTransitionPage({
