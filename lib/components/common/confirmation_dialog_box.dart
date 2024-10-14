@@ -1,6 +1,5 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class ConfirmationDialogBox extends StatelessWidget {
   final void Function() onYesPressed;
@@ -60,7 +59,12 @@ class ConfirmationDialogBox extends StatelessWidget {
                   const SizedBox(width: 50),
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => context.pop(),
+                      onPressed: () {
+                        // Check if the navigator can pop
+                        if (Navigator.canPop(context)) {
+                          Navigator.pop(context);
+                        }
+                      },
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
                           color: kPrimaryColor,

@@ -1,7 +1,6 @@
 import 'package:alphabet_list_view/alphabet_list_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -40,8 +39,13 @@ class _CreateOrUpdateClockState extends State<CreateOrUpdateClock> {
     }
     await widget.refetch();
     Loader.hide();
-    // ignore: use_build_context_synchronously
-    context.pop();
+    // Ensure the widget is still mounted before using context
+    if (!mounted) return;
+
+    // Check if the navigator can pop
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -224,7 +228,15 @@ class _CreateOrUpdateClockState extends State<CreateOrUpdateClock> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  onPressed: () => context.pop(),
+                  onPressed: () {
+                    // Ensure the widget is still mounted before using context
+                    if (!mounted) return;
+
+                    // Check if the navigator can pop
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    }
+                  },
                   icon: const Icon(Icons.close_outlined),
                 ),
                 const Text(
@@ -235,7 +247,15 @@ class _CreateOrUpdateClockState extends State<CreateOrUpdateClock> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () => context.pop(),
+                  onPressed: () {
+                    // Ensure the widget is still mounted before using context
+                    if (!mounted) return;
+
+                    // Check if the navigator can pop
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    }
+                  },
                   icon: const Icon(Icons.check_outlined),
                 ),
               ],

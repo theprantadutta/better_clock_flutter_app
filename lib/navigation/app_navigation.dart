@@ -1,3 +1,4 @@
+import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,7 +13,8 @@ import 'bottom_navgation_layout.dart';
 class AppNavigation {
   AppNavigation._();
 
-  static String initial = AlarmsScreen.kRouteName;
+  // static String initial = AlarmsScreen.kRouteName;
+  static String initial = RingScreen.kRouteName;
 
   // Private navigators
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -102,7 +104,19 @@ class AppNavigation {
         path: RingScreen.kRouteName,
         name: "Ring",
         builder: (context, state) {
-          final args = state.extra as RingScreenArguments;
+          RingScreenArguments args;
+          if (state.extra == null) {
+            args = RingScreenArguments(
+                alarmSettings: AlarmSettings(
+              id: 1,
+              dateTime: DateTime.now(),
+              assetAudioPath: 'assets/Animal_BGM.mp3',
+              notificationTitle: 'Test Notification',
+              notificationBody: 'Test Notification Body',
+            ));
+          } else {
+            args = state.extra as RingScreenArguments;
+          }
           return RingScreen(alarmSettings: args.alarmSettings);
         },
       ),

@@ -6,7 +6,6 @@ import 'package:better_clock_flutter_app/entities/world_clock.dart';
 import 'package:better_clock_flutter_app/packages/flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:better_clock_flutter_app/services/isar_service.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/timezone.dart';
 
@@ -147,7 +146,14 @@ class ClockLists extends StatelessWidget {
                                           await refetch();
                                           Loader.hide();
                                           // ignore: use_build_context_synchronously
-                                          context.pop();
+
+                                          // Ensure the widget is still mounted before using context
+                                          if (!context.mounted) return;
+
+                                          // Check if the navigator can pop
+                                          if (Navigator.canPop(context)) {
+                                            Navigator.pop(context);
+                                          }
                                         },
                                       );
                                     },

@@ -4,7 +4,6 @@ import 'package:animate_do/animate_do.dart';
 import 'package:better_clock_flutter_app/components/common/confirmation_dialog_box.dart';
 import 'package:better_clock_flutter_app/packages/flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../entities/alarm.dart';
 import '../../services/isar_service.dart';
@@ -77,8 +76,13 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
     Future.delayed(Duration.zero, () {
       Loader.hide();
     });
-    // ignore: use_build_context_synchronously
-    context.pop();
+    // Ensure the widget is still mounted before using context
+    if (!mounted) return;
+
+    // Check if the navigator can pop
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   @override

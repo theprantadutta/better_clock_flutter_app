@@ -63,7 +63,15 @@
 //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                 children: [
 //                   IconButton(
-//                     onPressed: () => context.pop(),
+// onPressed: () {
+//   // Ensure the widget is still mounted before using context
+//   if (!mounted) return;
+
+//   // Check if the navigator can pop
+//   if (Navigator.canPop(context)) {
+//     Navigator.pop(context);
+//   }
+// },
 //                     icon: const Icon(Icons.close_outlined),
 //                   ),
 //                   const Text(
@@ -74,7 +82,15 @@
 //                     ),
 //                   ),
 //                   IconButton(
-//                     onPressed: () => context.pop(),
+// onPressed: () {
+//   // Ensure the widget is still mounted before using context
+//   if (!mounted) return;
+
+//   // Check if the navigator can pop
+//   if (Navigator.canPop(context)) {
+//     Navigator.pop(context);
+//   }
+// },
 //                     icon: const Icon(Icons.check_outlined),
 //                   ),
 //                 ],
@@ -192,7 +208,6 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class SnoozeDurationModel {
   final String snoozeTitle;
@@ -293,7 +308,15 @@ class _AlarmSnoozeState extends State<AlarmSnooze> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    onPressed: () => context.pop(),
+                    onPressed: () {
+                      // Ensure the widget is still mounted before using context
+                      if (!mounted) return;
+
+                      // Check if the navigator can pop
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                    },
                     icon: const Icon(Icons.close_outlined),
                   ),
                   const Text(
@@ -304,7 +327,15 @@ class _AlarmSnoozeState extends State<AlarmSnooze> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () => context.pop(),
+                    onPressed: () {
+                      // Ensure the widget is still mounted before using context
+                      if (!mounted) return;
+
+                      // Check if the navigator can pop
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                    },
                     icon: const Icon(Icons.check_outlined),
                   ),
                 ],

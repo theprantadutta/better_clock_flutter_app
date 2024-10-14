@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:alarm/alarm.dart';
-import 'package:auto_start_flutter/auto_start_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_autostart/flutter_autostart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -24,6 +24,7 @@ class AlarmsScreen extends StatefulWidget {
 
 class _AlarmsScreenState extends State<AlarmsScreen> {
   static StreamSubscription<AlarmSettings>? subscription;
+  final _flutterAutostartPlugin = FlutterAutostart();
 
   @override
   void initState() {
@@ -80,22 +81,48 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
     }
   }
 
-  //initializing the autoStart with the first build.
   Future<void> initAutoStart() async {
     if (!mounted) return;
+
+    await checkIsAutoStartEnabled();
+    // Open the settings if needed (this could be based on the auto start availability)
+    await openAutoStartPermissionSettings();
+  }
+
+  Future<void> checkIsAutoStartEnabled() async {
+    String isAutoStartEnabled;
     try {
-      //check auto-start availability.
-      var test = await (isAutoStartAvailable);
+      isAutoStartEnabled =
+          await _flutterAutostartPlugin.checkIsAutoStartEnabled() == true
+              ? "Yes"
+              : "No";
       if (kDebugMode) {
-        print('is Auto Start Available $test');
+        print("isAutoStartEnabled: $isAutoStartEnabled");
       }
-      //if available then navigate to auto-start setting page.
-      if (test == true) await getAutoStartPermission();
-    } on PlatformException catch (e) {
+    } on PlatformException {
+      isAutoStartEnabled = 'Failed to check isAutoStartEnabled.';
       if (kDebugMode) {
-        print(e);
+        print(isAutoStartEnabled);
       }
     }
+  }
+
+  Future<void> openAutoStartPermissionSettings() async {
+    String autoStartPermission;
+    try {
+      autoStartPermission =
+          await _flutterAutostartPlugin.showAutoStartPermissionSettings() ??
+              'Unknown autoStartPermission';
+      if (kDebugMode) {
+        print("autoStartPermission: $autoStartPermission");
+      }
+    } on PlatformException {
+      autoStartPermission = 'Failed to show autoStartPermission.';
+      if (kDebugMode) {
+        print(autoStartPermission);
+      }
+    }
+    if (!mounted) return;
   }
 
   @override

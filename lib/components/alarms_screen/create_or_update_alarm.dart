@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:alarm/alarm.dart' as alarm_lib;
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../constants/selectors.dart';
 import '../../entities/alarm.dart';
@@ -157,8 +156,14 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
     Future.delayed(Duration.zero, () {
       Loader.hide();
     });
-    // ignore: use_build_context_synchronously
-    return context.pop();
+
+    // Ensure the widget is still mounted before using context
+    if (!mounted) return;
+
+    // Check if the navigator can pop
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   int _getDaysOffset(String day) {
@@ -215,7 +220,15 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  onPressed: () => context.pop(),
+                  onPressed: () {
+                    // Ensure the widget is still mounted before using context
+                    if (!mounted) return;
+
+                    // Check if the navigator can pop
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    }
+                  },
                   icon: const Icon(Icons.close_outlined),
                 ),
                 Text(
