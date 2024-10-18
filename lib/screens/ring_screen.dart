@@ -1,10 +1,10 @@
 import 'package:alarm/alarm.dart';
-import 'package:better_clock_flutter_app/components/common/animated_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:pulsator/pulsator.dart';
 
+import '../components/common/animated_text.dart';
 import '../services/isar_service.dart';
 
 class RingScreen extends StatelessWidget {
@@ -13,7 +13,7 @@ class RingScreen extends StatelessWidget {
 
   final AlarmSettings alarmSettings;
 
-  Future<void> stopAlarm(BuildContext context) async {
+  Future<void> stopAlarm() async {
     final alarmId = alarmSettings.id;
     await Alarm.stop(alarmId);
     final theAlarm = await IsarService().getAlarmById(alarmId);
@@ -60,7 +60,7 @@ class RingScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 AnimatedText(
-                  text: alarmSettings.notificationTitle,
+                  text: alarmSettings.notificationSettings.title,
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 40,
@@ -86,54 +86,59 @@ class RingScreen extends StatelessWidget {
             ),
             Column(
               children: [
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.9,
-                  child: SwipeButton.expand(
-                    thumb: const Icon(
-                      Icons.double_arrow_rounded,
-                      color: Colors.white,
-                    ),
-                    activeThumbColor: kSecondaryColor,
-                    activeTrackColor: kSecondaryColor.withOpacity(0.2),
-                    onSwipe: () => stopAlarm(context),
-                    child: const AnimatedText(
-                      text: "Swipe to Snooze...",
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                        color: Color(0xFF666870),
-                        height: 1,
-                        letterSpacing: -1,
-                      ),
-                    ),
-                  ),
+                RingScreenSwipeButton(
+                  color: kSecondaryColor,
+                  title: "Swipe to Snooze...",
+                  onPressed: () => snoozeAlarm(),
                 ),
                 const SizedBox(height: 10),
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.9,
-                  child: SwipeButton.expand(
-                    thumb: const Icon(
-                      Icons.double_arrow_rounded,
-                      color: Colors.white,
-                    ),
-                    activeThumbColor: kPrimaryColor,
-                    activeTrackColor: kPrimaryColor.withOpacity(0.2),
-                    onSwipe: () => stopAlarm(context),
-                    child: const AnimatedText(
-                      text: "Swipe to Stop...",
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                        color: Color(0xFF666870),
-                        height: 1,
-                        letterSpacing: -1,
-                      ),
-                    ),
-                  ),
+                RingScreenSwipeButton(
+                  color: kPrimaryColor,
+                  title: "Swipe to Stop...",
+                  onPressed: () => stopAlarm(),
                 ),
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class RingScreenSwipeButton extends StatelessWidget {
+  final Color color;
+  final String title;
+  final VoidCallback onPressed;
+
+  const RingScreenSwipeButton({
+    super.key,
+    required this.color,
+    required this.title,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.sizeOf(context).width * 0.9,
+      child: SwipeButton.expand(
+        thumb: const Icon(
+          Icons.double_arrow_rounded,
+          color: Colors.white,
+        ),
+        activeThumbColor: color,
+        activeTrackColor: color.withOpacity(0.2),
+        onSwipe: onPressed,
+        child: AnimatedText(
+          text: title,
+          textStyle: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            color: Color(0xFF666870),
+            height: 1,
+            letterSpacing: -1,
+          ),
         ),
       ),
     );

@@ -13,8 +13,8 @@ import 'bottom_navgation_layout.dart';
 class AppNavigation {
   AppNavigation._();
 
-  // static String initial = AlarmsScreen.kRouteName;
-  static String initial = RingScreen.kRouteName;
+  static String initial = AlarmsScreen.kRouteName;
+  // static String initial = RingScreen.kRouteName;
 
   // Private navigators
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -107,13 +107,17 @@ class AppNavigation {
           RingScreenArguments args;
           if (state.extra == null) {
             args = RingScreenArguments(
-                alarmSettings: AlarmSettings(
-              id: 1,
-              dateTime: DateTime.now(),
-              assetAudioPath: 'assets/Animal_BGM.mp3',
-              notificationTitle: 'Test Notification',
-              notificationBody: 'Test Notification Body',
-            ));
+              alarmSettings: AlarmSettings(
+                id: 1,
+                dateTime: DateTime.now(),
+                assetAudioPath: 'assets/Animal_BGM.mp3',
+                notificationSettings: NotificationSettings(
+                  title: 'Test Notification',
+                  body: 'Test Notification Body',
+                  stopButton: 'Stop',
+                ),
+              ),
+            );
           } else {
             args = state.extra as RingScreenArguments;
           }

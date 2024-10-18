@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/alarms_screen/alarms_list.dart';
 import '../components/world_clock_screen/clock_lists.dart';
@@ -37,12 +38,40 @@ class IsarService {
 
   Future<List<Alarm>> getAllAlarm() async {
     final isar = await openDB();
+
+    // Get SharedPreferences instance
+    final prefs = await SharedPreferences.getInstance();
+
+    // Check if alarms have been initialized before
+    final bool hasInitializedAlarms =
+        prefs.getBool('hasInitializedAlarms') ?? true;
+
+    // Fetch all alarms from the database
     final allAlarms = await isar.alarms.where().findAllAsync();
-    if (allAlarms.isEmpty) {
+
+    // If alarms have not been initialized, initialize them
+    if (allAlarms.isEmpty && !hasInitializedAlarms) {
+      // Insert initial alarms
       await isar.writeAsync((isarDb) => isarDb.alarms.putAll(initialAlarms));
+
+      // Set initialization flag to true
+      await prefs.setBool('hasInitializedAlarms', true);
+
       return initialAlarms;
     }
+
+    // Return existing alarms if already initialized
     return allAlarms;
+  }
+
+  Stream<List<Alarm>> watchAllAlarms() async* {
+    final isar = await openDB();
+
+    // Watch for changes in the 'alarms' collection
+    yield* isar.alarms.watchLazy().asyncMap((_) async {
+      // Return the updated list of alarms whenever there is a change
+      return await isar.alarms.where().findAllAsync();
+    });
   }
 
   Stream<void> watchAlarmChange() async* {
@@ -65,7 +94,7 @@ class IsarService {
         (isarDb) => isarDb.alarms.put(
           Alarm(
             id: currentAlarm.id,
-            alarmEnabled: alarmEnabled,
+            alarmEnabled: !currentAlarm.ringOnce || alarmEnabled,
             title: currentAlarm.title,
             ringOnce: currentAlarm.ringOnce,
             durationMinutes: currentAlarm.durationMinutes,

@@ -61,14 +61,52 @@ class _AlarmsListState extends State<AlarmsList> {
   @override
   Widget build(BuildContext context) {
     final defaultHeight = MediaQuery.sizeOf(context).height * 0.74;
+    final kPrimaryColor = Theme.of(context).primaryColor;
     return CachedFutureHandler(
       defaultHeight: defaultHeight,
       id: 'all-alarms',
       future: IsarService().getAllAlarm,
       builder: (context, alarms, refetch) {
+        addAlarm() => showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => CreateOrUpdateAlarm(
+                refetch: refetch,
+              ),
+            );
         if (alarms.isEmpty) {
-          return const Center(
-            child: Text('No Alarms Were Created'),
+          return SizedBox(
+            height: defaultHeight,
+            width: MediaQuery.sizeOf(context).width * 0.8,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.hourglass_empty,
+                  size: 50,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'No Alarms Were Created',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                      width: 1.0,
+                      color: kPrimaryColor,
+                    ),
+                  ),
+                  onPressed: addAlarm,
+                  child: Text('Add Alarm'),
+                ),
+              ],
+            ),
           );
         }
         return SizedBox(
@@ -77,28 +115,16 @@ class _AlarmsListState extends State<AlarmsList> {
             children: [
               ListView.builder(
                 itemCount: alarms.length,
-                itemBuilder: (context, index) {
-                  return SingleAlarmRow(
-                    alarm: alarms[index],
-                    refetch: refetch,
-                    index: index,
-                  );
-                },
+                itemBuilder: (context, index) => SingleAlarmRow(
+                  alarm: alarms[index],
+                  refetch: refetch,
+                  index: index,
+                ),
               ),
               FloatingAddButton(
                 iconData: Icons.add_outlined,
                 title: 'Add Alarm',
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) {
-                      return CreateOrUpdateAlarm(
-                        refetch: refetch,
-                      );
-                    },
-                  );
-                },
+                onPressed: addAlarm,
               ),
             ],
           ),

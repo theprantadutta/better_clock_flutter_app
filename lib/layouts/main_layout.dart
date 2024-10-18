@@ -14,6 +14,7 @@ class MainLayout extends StatelessWidget {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     final theDarkness = isDarkTheme ? Brightness.light : Brightness.dark;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: AnnotatedRegion(
         value: SystemUiOverlayStyle(
           statusBarBrightness: theDarkness,

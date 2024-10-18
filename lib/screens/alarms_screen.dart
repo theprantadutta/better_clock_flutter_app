@@ -122,22 +122,19 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
         print(autoStartPermission);
       }
     }
-    if (!mounted) return;
   }
 
   @override
   Widget build(BuildContext context) {
     return MainLayout(
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-              const AlarmScreenTitle(),
-              const AlarmsList(),
-            ],
-          ),
+      body: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          children: [
+            SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+            const AlarmScreenTitle(),
+            const AlarmsList(),
+          ],
         ),
       ),
     );

@@ -1,37 +1,32 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:fquery/fquery.dart';
 
-class CachedFutureHandler<T, K> extends HookWidget {
+class CachedStreamHandler<T> extends HookWidget {
   final String id;
-  final Future<T> Function() future;
+  final Stream<T> Function() stream;
   final Widget Function(
     BuildContext,
-    T,
-    Future<void> Function() refetch,
+    T?,
+    void Function() refetch,
   ) builder;
   final double defaultHeight;
 
-  const CachedFutureHandler({
+  const CachedStreamHandler({
     super.key,
     required this.id,
-    required this.future,
+    required this.stream,
     required this.builder,
     this.defaultHeight = 100,
   });
 
   @override
   Widget build(BuildContext context) {
-    final data = useQuery<T, K>([id], future);
-    Future<void> refetch() async {
-      debugPrint('ReFetching $id Future...');
-      await data.refetch();
-    }
+    final data = useStream(stream(), initialData: null);
 
     return Builder(
       builder: (context) {
-        if (data.isLoading) {
+        if (data.connectionState == ConnectionState.waiting) {
           return Center(
             child: SizedBox(
               height: defaultHeight,
@@ -44,15 +39,15 @@ class CachedFutureHandler<T, K> extends HookWidget {
           );
         }
 
-        if (data.isError) {
+        if (data.hasError) {
           if (kDebugMode) {
-            print('Something Went Wrong When Getting data from Future');
+            print('Something Went Wrong When Getting data from Stream');
             print(data.error);
           }
           return SizedBox(
             height: defaultHeight,
             child: GestureDetector(
-              onTap: refetch,
+              onTap: () => data.requireData, // Trigger refetch logic for stream
               child: const Center(
                 child: Text('Something Went Wrong'),
               ),
@@ -60,8 +55,7 @@ class CachedFutureHandler<T, K> extends HookWidget {
           );
         }
 
-        if (data.data == null) throw Exception("Something Went Wrong");
-        return builder(context, data.data as T, refetch);
+        return builder(context, data.data, () => data.requireData);
       },
     );
   }

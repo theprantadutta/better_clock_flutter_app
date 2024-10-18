@@ -114,7 +114,11 @@ class _RingtoneListState extends State<RingtoneList> {
                 IconButton(
                   onPressed: () async {
                     await audioPlayer.stop();
-                    context.pop(currentlySelected);
+                    if (!mounted) return;
+                    if (Navigator.canPop(context)) {
+                      // context.pop(currentlySelected);
+                      Navigator.pop(context, currentlySelected);
+                    }
                   },
                   icon: const Icon(Icons.check_outlined),
                 ),
