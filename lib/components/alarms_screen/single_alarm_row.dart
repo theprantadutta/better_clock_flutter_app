@@ -6,14 +6,15 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../entities/alarm.dart';
+import '../../entities/alarm_entity.dart';
 import '../../packages/flutter_overlay_loader/flutter_overlay_loader.dart';
 import '../../services/isar_service.dart';
+import '../../util/functions.dart';
 import '../common/confirmation_dialog_box.dart';
 import 'create_or_update_alarm.dart';
 
 class SingleAlarmRow extends StatefulWidget {
-  final Alarm alarm;
+  final AlarmEntity alarm;
   final int index;
   final Future<void> Function() refetch;
 
@@ -99,7 +100,7 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
     if (widget.alarm.days != null && widget.alarm.days!.isNotEmpty) {
       // Loop through each weekday instance and stop the associated alarms
       for (String day in widget.alarm.days!) {
-        int dayId = widget.alarm.id + _getDayOffset(day);
+        int dayId = widget.alarm.id + getDayOffset(day);
         await alarm_lib.Alarm.stop(dayId);
       }
     } else {
@@ -124,30 +125,8 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
     }
   }
 
-// Helper function to calculate unique offset for each day
-  int _getDayOffset(String day) {
-    switch (day) {
-      case 'Monday':
-        return DateTime.monday;
-      case 'Tuesday':
-        return DateTime.tuesday;
-      case 'Wednesday':
-        return DateTime.wednesday;
-      case 'Thursday':
-        return DateTime.thursday;
-      case 'Friday':
-        return DateTime.friday;
-      case 'Saturday':
-        return DateTime.saturday;
-      case 'Sunday':
-        return DateTime.sunday;
-      default:
-        return 0;
-    }
-  }
-
   Future<bool> updateAnAlarmEnabled(
-      Alarm currentAlarm, bool alarmEnabled) async {
+      AlarmEntity currentAlarm, bool alarmEnabled) async {
     try {
       final isar = await IsarService().openDB();
 
@@ -168,8 +147,8 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
 
       // Update the alarm in the database
       await isar.writeAsync(
-        (isarDb) => isarDb.alarms.put(
-          Alarm(
+        (isarDb) => isarDb.alarmEntitys.put(
+          AlarmEntity(
             id: currentAlarm.id,
             alarmEnabled: alarmEnabled,
             title: currentAlarm.title,
@@ -195,7 +174,7 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
   }
 
   // Helper to set a one-time alarm
-  Future<void> _setSingleAlarm(Alarm alarm) async {
+  Future<void> _setSingleAlarm(AlarmEntity alarm) async {
     DateTime now = DateTime.now();
 
     // Set the alarm time based on the current day and duration
@@ -216,7 +195,7 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
   }
 
 // Helper to set recurring alarms based on selected days
-  Future<void> _setRecurringAlarms(Alarm alarm) async {
+  Future<void> _setRecurringAlarms(AlarmEntity alarm) async {
     DateTime now = DateTime.now();
 
     for (String day in alarm.days!) {
@@ -244,7 +223,7 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
 
   // Helper to create alarm settings
   alarm_lib.AlarmSettings _createAlarmSettings(
-      Alarm alarm, DateTime selectedDateTime) {
+      AlarmEntity alarm, DateTime selectedDateTime) {
     return alarm_lib.AlarmSettings(
       id: alarm.id,
       dateTime: selectedDateTime,

@@ -4,7 +4,7 @@ import 'package:alarm/alarm.dart' as alarm_lib;
 import 'package:flutter/material.dart';
 
 import '../../constants/selectors.dart';
-import '../../entities/alarm.dart';
+import '../../entities/alarm_entity.dart';
 import '../../packages/flutter_overlay_loader/flutter_overlay_loader.dart';
 import '../../services/isar_service.dart';
 import 'alarm_snooze.dart';
@@ -23,7 +23,7 @@ const kSatDay = 'SAT';
 
 class CreateOrUpdateAlarm extends StatefulWidget {
   final Future<void> Function() refetch;
-  final Alarm? alarm;
+  final AlarmEntity? alarm;
 
   const CreateOrUpdateAlarm({
     super.key,
@@ -173,8 +173,8 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
   Future<void> addOrUpdateAnAlarm() async {
     Loader.show(context);
     final isar = await IsarService().openDB();
-    final alarm = Alarm(
-      id: widget.alarm == null ? isar.alarms.autoIncrement() : widget.alarm!.id,
+    final alarm = AlarmEntity(
+      id: widget.alarm == null ? isar.alarmEntitys.autoIncrement() : widget.alarm!.id,
       alarmEnabled: true,
       title: alarmTitle.isEmpty ? 'Alarm' : alarmTitle,
       durationMinutes: alarmTime.inMinutes,

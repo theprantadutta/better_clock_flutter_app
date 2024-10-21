@@ -1,11 +1,14 @@
 import 'package:alarm/alarm.dart';
+import 'package:better_clock_flutter_app/entities/alarm_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
-import 'package:pulsator/pulsator.dart';
+import 'package:alarm/alarm.dart' as alarm_lib;
 
 import '../components/common/animated_text.dart';
+import '../components/ring_screen/alarm_animation.dart';
 import '../services/isar_service.dart';
+import '../util/functions.dart';
 
 class RingScreen extends StatelessWidget {
   static const kRouteName = '/ring';
@@ -15,15 +18,74 @@ class RingScreen extends StatelessWidget {
 
   Future<void> stopAlarm() async {
     final alarmId = alarmSettings.id;
-    await Alarm.stop(alarmId);
+
+    // 1. Stop the current alarm instance
+    await alarm_lib.Alarm.stop(alarmId);
+
+    // 2. Get the alarm from the Isar database by ID
     final theAlarm = await IsarService().getAlarmById(alarmId);
+
+    // 3. Check if the alarm exists in the database
     if (theAlarm != null) {
-      await IsarService().updateAnAlarmEnabled(
-        theAlarm,
-        false,
-      );
+      // If it's a recurring alarm, reschedule it for the next occurrence
+      if (theAlarm.days != null && theAlarm.days!.isNotEmpty) {
+        // 4. Find the next occurrence day and schedule the alarm
+        DateTime nextAlarmTime = _getNextRecurringAlarmDate(theAlarm);
+
+        final alarmSettings = alarm_lib.AlarmSettings(
+          id: alarmId,
+          dateTime: nextAlarmTime,
+          assetAudioPath: 'assets/ringtones/${theAlarm.ringtone}',
+          loopAudio: true,
+          vibrate: theAlarm.vibrate,
+          volume: 0.8,
+          fadeDuration: 3.0,
+          notificationSettings: alarm_lib.NotificationSettings(
+            title: theAlarm.title,
+            body: '${theAlarm.title} is Now active.',
+            stopButton: 'Stop Alarm',
+          ),
+        );
+
+        await alarm_lib.Alarm.set(alarmSettings: alarmSettings);
+      } else {
+        // 5. If it's a one-time alarm, disable it
+        await IsarService().updateAnAlarmEnabled(
+          theAlarm,
+          false,
+        );
+      }
     }
+
+    // 6. Close the app if required
     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+  }
+
+// Helper function to get the next alarm date for a recurring alarm
+  DateTime _getNextRecurringAlarmDate(AlarmEntity theAlarm) {
+    DateTime now = DateTime.now();
+    List<String> days =
+        theAlarm.days!; // Days of the week (e.g., 'Monday', 'Tuesday')
+
+    // Find the next day in the future for this alarm
+    for (String day in days) {
+      int daysOffset = getDayOffset(day);
+      DateTime potentialDateTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        now.hour,
+        now.minute,
+      ).add(Duration(days: (daysOffset - now.weekday + 7) % 7));
+
+      // Ensure the new alarm is set in the future
+      if (potentialDateTime.isAfter(now)) {
+        return potentialDateTime;
+      }
+    }
+
+    // If no future day is found, set it for the same day next week
+    return now.add(const Duration(days: 7));
   }
 
   Future<void> snoozeAlarm() async {
@@ -71,19 +133,7 @@ class RingScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
-              height: MediaQuery.sizeOf(context).height * 0.4,
-              child: const Pulsator(
-                style: PulseStyle(color: Colors.blue),
-                count: 5,
-                duration: Duration(seconds: 4),
-                repeat: 0,
-                startFromScratch: false,
-                autoStart: true,
-                fit: PulseFit.contain,
-                child: Text('🔔', style: TextStyle(fontSize: 50)),
-              ),
-            ),
+            AlarmAnimation(),
             Column(
               children: [
                 RingScreenSwipeButton(

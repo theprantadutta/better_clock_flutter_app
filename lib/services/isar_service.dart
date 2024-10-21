@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/alarms_screen/alarms_list.dart';
 import '../components/world_clock_screen/clock_lists.dart';
-import '../entities/alarm.dart';
+import '../entities/alarm_entity.dart';
 import '../entities/world_clock.dart';
 
 class IsarService {
@@ -19,16 +19,16 @@ class IsarService {
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();
     return Isar.open(
-      schemas: [AlarmSchema, WorldClockSchema],
+      schemas: [AlarmEntitySchema, WorldClockSchema],
       directory: dir.path,
     );
   }
 
-  Future<bool> createAlarm(Alarm alarm) async {
+  Future<bool> createAlarm(AlarmEntity alarm) async {
     try {
       final isar = await openDB();
       await isar.writeAsync((isarDb) {
-        isarDb.alarms.put(alarm);
+        isarDb.alarmEntitys.put(alarm);
       });
       return true;
     } catch (e) {
@@ -36,7 +36,7 @@ class IsarService {
     }
   }
 
-  Future<List<Alarm>> getAllAlarm() async {
+  Future<List<AlarmEntity>> getAllAlarm() async {
     final isar = await openDB();
 
     // Get SharedPreferences instance
@@ -47,12 +47,12 @@ class IsarService {
         prefs.getBool('hasInitializedAlarms') ?? true;
 
     // Fetch all alarms from the database
-    final allAlarms = await isar.alarms.where().findAllAsync();
+    final allAlarms = await isar.alarmEntitys.where().findAllAsync();
 
     // If alarms have not been initialized, initialize them
     if (allAlarms.isEmpty && !hasInitializedAlarms) {
       // Insert initial alarms
-      await isar.writeAsync((isarDb) => isarDb.alarms.putAll(initialAlarms));
+      await isar.writeAsync((isarDb) => isarDb.alarmEntitys.putAll(initialAlarms));
 
       // Set initialization flag to true
       await prefs.setBool('hasInitializedAlarms', true);
@@ -64,35 +64,35 @@ class IsarService {
     return allAlarms;
   }
 
-  Stream<List<Alarm>> watchAllAlarms() async* {
+  Stream<List<AlarmEntity>> watchAllAlarms() async* {
     final isar = await openDB();
 
     // Watch for changes in the 'alarms' collection
-    yield* isar.alarms.watchLazy().asyncMap((_) async {
+    yield* isar.alarmEntitys.watchLazy().asyncMap((_) async {
       // Return the updated list of alarms whenever there is a change
-      return await isar.alarms.where().findAllAsync();
+      return await isar.alarmEntitys.where().findAllAsync();
     });
   }
 
   Stream<void> watchAlarmChange() async* {
     final isar = await openDB();
-    yield isar.alarms.watchLazy(fireImmediately: true);
+    yield isar.alarmEntitys.watchLazy(fireImmediately: true);
   }
 
-  Future<Alarm?> getAlarmById(int alarmId) async {
+  Future<AlarmEntity?> getAlarmById(int alarmId) async {
     final isar = await openDB();
-    return await isar.alarms.where().idEqualTo(alarmId).findFirstAsync();
+    return await isar.alarmEntitys.where().idEqualTo(alarmId).findFirstAsync();
   }
 
   Future<bool> updateAnAlarmEnabled(
-    Alarm currentAlarm,
+    AlarmEntity currentAlarm,
     bool alarmEnabled,
   ) async {
     try {
       final isar = await IsarService().openDB();
       await isar.writeAsync(
-        (isarDb) => isarDb.alarms.put(
-          Alarm(
+        (isarDb) => isarDb.alarmEntitys.put(
+          AlarmEntity(
             id: currentAlarm.id,
             alarmEnabled: !currentAlarm.ringOnce || alarmEnabled,
             title: currentAlarm.title,
@@ -119,7 +119,7 @@ class IsarService {
   Future<bool> deleteAnAlarm(int id) async {
     try {
       final isar = await openDB();
-      await isar.writeAsync((isarDb) => isarDb.alarms.delete(id));
+      await isar.writeAsync((isarDb) => isarDb.alarmEntitys.delete(id));
       return true;
     } catch (e) {
       if (kDebugMode) {

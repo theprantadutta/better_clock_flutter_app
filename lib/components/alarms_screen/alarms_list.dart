@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../components/common/cached_future_handler.dart';
 import '../../constants/selectors.dart';
-import '../../entities/alarm.dart';
+import '../../entities/alarm_entity.dart';
 import '../../services/isar_service.dart';
 import '../common/floating_add_button.dart';
 import 'create_or_update_alarm.dart';
 import 'single_alarm_row.dart';
 
-List<Alarm> initialAlarms = [
-  Alarm(
+List<AlarmEntity> initialAlarms = [
+  AlarmEntity(
     id: 1,
     alarmEnabled: false,
     title: 'Morning',
@@ -22,7 +22,7 @@ List<Alarm> initialAlarms = [
     snoozeDurationMinutes: 5,
     snoozeTime: 2,
   ),
-  Alarm(
+  AlarmEntity(
     id: 2,
     alarmEnabled: false,
     title: 'Morning 2',
@@ -35,7 +35,7 @@ List<Alarm> initialAlarms = [
     snoozeDurationMinutes: 5,
     snoozeTime: 2,
   ),
-  Alarm(
+  AlarmEntity(
     id: 3,
     alarmEnabled: false,
     title: 'Reading',

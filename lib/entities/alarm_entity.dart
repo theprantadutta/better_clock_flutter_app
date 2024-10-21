@@ -1,9 +1,9 @@
 import 'package:isar/isar.dart';
 
-part '../generated/entities/alarm.g.dart';
+part '../generated/entities/alarm_entity.g.dart';
 
 @collection
-class Alarm {
+class AlarmEntity {
   final int id;
   final bool alarmEnabled;
   final String title;
@@ -16,7 +16,7 @@ class Alarm {
   final int snoozeDurationMinutes;
   final int snoozeTime;
 
-  Alarm({
+  AlarmEntity({
     required this.id,
     required this.alarmEnabled,
     required this.title,
