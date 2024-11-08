@@ -2,8 +2,8 @@
 
 Better Clock is a Flutter app designed as an improved version of the default Android Clock app. It includes core features like setting Alarms, World Clock, Stopwatch, and Timer, aiming to provide a seamless and enhanced user experience.
 
-![Light Theme Screenshot](./screenshots/better_clock_1_light.jpg)
-![Dark Theme Screenshot](./screenshots/better_clock_1_dark.jpg)
+![Light Theme Screenshot](./screenshots/Better_Clock_1_Light.jpg)
+![Dark Theme Screenshot](./screenshots/Better_Clock_1_Dark.jpg)
 
 ## Features
 
@@ -15,19 +15,19 @@ Better Clock is a Flutter app designed as an improved version of the default And
 ## Screenshots
 
 ### Light Theme
-![Light Theme](./screenshots/better_clock_1_light.jpg)
-![Light Theme](./screenshots/better_clock_2_light.jpg)
-![Light Theme](./screenshots/better_clock_3_light.jpg)
-![Light Theme](./screenshots/better_clock_4_light.jpg)
-![Light Theme](./screenshots/better_clock_5_light.jpg)
-![Light Theme](./screenshots/better_clock_6_light.jpg)
-![Light Theme](./screenshots/better_clock_7_light.jpg)
+![Light Theme](./screenshots/Better_Clock_1_Light.jpg)
+![Light Theme](./screenshots/Better_Clock_2_Light.jpg)
+![Light Theme](./screenshots/Better_Clock_3_Light.jpg)
+![Light Theme](./screenshots/Better_Clock_4_Light.jpg)
+![Light Theme](./screenshots/Better_Clock_5_Light.jpg)
+![Light Theme](./screenshots/Better_Clock_6_Light.jpg)
+![Light Theme](./screenshots/Better_Clock_7_Light.jpg)
 
 ### Dark Theme
-![Dark Theme](./screenshots/better_clock_1_dark.jpg)
-![Dark Theme](./screenshots/better_clock_2_dark.jpg)
-![Dark Theme](./screenshots/better_clock_3_dark.jpg)
-![Dark Theme](./screenshots/better_clock_4_dark.jpg)
-![Dark Theme](./screenshots/better_clock_5_dark.jpg)
-![Dark Theme](./screenshots/better_clock_6_dark.jpg)
-![Dark Theme](./screenshots/better_clock_7_dark.jpg)
+![Dark Theme](./screenshots/Better_Clock_1_Dark.jpg)
+![Dark Theme](./screenshots/Better_Clock_2_Dark.jpg)
+![Dark Theme](./screenshots/Better_Clock_3_Dark.jpg)
+![Dark Theme](./screenshots/Better_Clock_4_Dark.jpg)
+![Dark Theme](./screenshots/Better_Clock_5_Dark.jpg)
+![Dark Theme](./screenshots/Better_Clock_6_Dark.jpg)
+![Dark Theme](./screenshots/Better_Clock_7_Dark.jpg)
