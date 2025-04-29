@@ -1,9 +1,9 @@
+import 'package:alarm/alarm.dart' as alarm_lib;
 import 'package:alarm/alarm.dart';
 import 'package:better_clock_flutter_app/entities/alarm_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
-import 'package:alarm/alarm.dart' as alarm_lib;
 
 import '../components/common/animated_text.dart';
 import '../components/ring_screen/alarm_animation.dart';
@@ -38,8 +38,10 @@ class RingScreen extends StatelessWidget {
           assetAudioPath: 'assets/ringtones/${theAlarm.ringtone}',
           loopAudio: true,
           vibrate: theAlarm.vibrate,
-          volume: 0.8,
-          fadeDuration: 3.0,
+          volumeSettings: VolumeSettings.fade(
+            fadeDuration: Duration(seconds: 3),
+            volume: 0.8,
+          ),
           notificationSettings: alarm_lib.NotificationSettings(
             title: theAlarm.title,
             body: '${theAlarm.title} is Now active.',

@@ -28,10 +28,10 @@ android {
     
     // Needed for Alarms Package
     // compileSdk = flutter.compileSdkVersion
-    compileSdk = 34
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 35
+    // ndkVersion = flutter.ndkVersion
 
-    ndkVersion = "25.1.8937393"
+    ndkVersion "27.0.12077973"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

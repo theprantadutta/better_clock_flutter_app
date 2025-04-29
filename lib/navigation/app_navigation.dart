@@ -111,6 +111,8 @@ class AppNavigation {
                 id: 1,
                 dateTime: DateTime.now(),
                 assetAudioPath: 'assets/Animal_BGM.mp3',
+                volumeSettings:
+                    VolumeSettings.fade(fadeDuration: Duration(seconds: 5)),
                 notificationSettings: NotificationSettings(
                   title: 'Test Notification',
                   body: 'Test Notification Body',

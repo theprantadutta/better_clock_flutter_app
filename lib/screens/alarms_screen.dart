@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:alarm/alarm.dart';
@@ -50,9 +52,9 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
   Future<void> checkAndroidNotificationPermission() async {
     final status = await Permission.notification.status;
     if (status.isDenied) {
-      alarmPrint('Requesting notification permission...');
+      debugPrint('Requesting notification permission...');
       final res = await Permission.notification.request();
-      alarmPrint(
+      debugPrint(
         'Notification permission ${res.isGranted ? '' : 'not '}granted',
       );
     }
@@ -61,9 +63,9 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
   Future<void> checkAndroidExternalStoragePermission() async {
     final status = await Permission.storage.status;
     if (status.isDenied) {
-      alarmPrint('Requesting external storage permission...');
+      debugPrint('Requesting external storage permission...');
       final res = await Permission.storage.request();
-      alarmPrint(
+      debugPrint(
         'External storage permission ${res.isGranted ? '' : 'not'} granted',
       );
     }
@@ -71,11 +73,11 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
 
   Future<void> checkAndroidScheduleExactAlarmPermission() async {
     final status = await Permission.scheduleExactAlarm.status;
-    alarmPrint('Schedule exact alarm permission: $status.');
+    debugPrint('Schedule exact alarm permission: $status.');
     if (status.isDenied) {
-      alarmPrint('Requesting schedule exact alarm permission...');
+      debugPrint('Requesting schedule exact alarm permission...');
       final res = await Permission.scheduleExactAlarm.request();
-      alarmPrint(
+      debugPrint(
         'Schedule exact alarm permission ${res.isGranted ? '' : 'not'} granted',
       );
     }
@@ -84,12 +86,13 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
   Future<void> initAutoStart() async {
     if (!mounted) return;
 
-    await checkIsAutoStartEnabled();
+    String autoStartEnabled = await checkIsAutoStartEnabled();
+    if (autoStartEnabled == 'Yes') return;
     // Open the settings if needed (this could be based on the auto start availability)
     await openAutoStartPermissionSettings();
   }
 
-  Future<void> checkIsAutoStartEnabled() async {
+  Future<String> checkIsAutoStartEnabled() async {
     String isAutoStartEnabled;
     try {
       isAutoStartEnabled =
@@ -105,23 +108,60 @@ class _AlarmsScreenState extends State<AlarmsScreen> {
         print(isAutoStartEnabled);
       }
     }
+
+    return isAutoStartEnabled;
   }
 
   Future<void> openAutoStartPermissionSettings() async {
     String autoStartPermission;
-    try {
-      autoStartPermission =
-          await _flutterAutostartPlugin.showAutoStartPermissionSettings() ??
-              'Unknown autoStartPermission';
-      if (kDebugMode) {
-        print("autoStartPermission: $autoStartPermission");
-      }
-    } on PlatformException {
-      autoStartPermission = 'Failed to show autoStartPermission.';
-      if (kDebugMode) {
-        print(autoStartPermission);
-      }
-    }
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Auto-start Required"),
+        content: const Text(
+            "Please enable auto-start for this app in your device settings "
+            "to ensure it runs properly in the background."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              try {
+                autoStartPermission = await _flutterAutostartPlugin
+                        .showAutoStartPermissionSettings() ??
+                    'Unknown autoStartPermission';
+                if (kDebugMode) {
+                  print("autoStartPermission: $autoStartPermission");
+                }
+              } on PlatformException {
+                autoStartPermission = 'Failed to show autoStartPermission.';
+                if (kDebugMode) {
+                  print(autoStartPermission);
+                }
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("Error"),
+                    content: const Text(
+                        "Could not check auto-start status. Some features may not work as intended."),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("OK"),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+            child: const Text("Open Settings"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:alarm/alarm.dart' as alarm_lib;
+import 'package:alarm/alarm.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -230,8 +231,10 @@ class _SingleAlarmRowState extends State<SingleAlarmRow> {
       assetAudioPath: 'assets/ringtones/${alarm.ringtone}',
       loopAudio: true,
       vibrate: alarm.vibrate,
-      volume: 0.8,
-      fadeDuration: 3.0,
+      // volume: 0.8,
+      // fadeDuration: 3.0,
+      volumeSettings:
+          VolumeSettings.fade(fadeDuration: Duration(seconds: 3), volume: 0.8),
       warningNotificationOnKill: Platform.isIOS,
       notificationSettings: alarm_lib.NotificationSettings(
         title: alarm.title,

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:alarm/alarm.dart' as alarm_lib;
+import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/selectors.dart';
@@ -174,7 +175,9 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
     Loader.show(context);
     final isar = await IsarService().openDB();
     final alarm = AlarmEntity(
-      id: widget.alarm == null ? isar.alarmEntitys.autoIncrement() : widget.alarm!.id,
+      id: widget.alarm == null
+          ? isar.alarmEntitys.autoIncrement()
+          : widget.alarm!.id,
       alarmEnabled: true,
       title: alarmTitle.isEmpty ? 'Alarm' : alarmTitle,
       durationMinutes: alarmTime.inMinutes,
@@ -213,8 +216,10 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
         assetAudioPath: 'assets/ringtones/${alarm.ringtone}',
         loopAudio: true,
         vibrate: alarm.vibrate,
-        volume: 0.8,
-        fadeDuration: 3.0,
+        // volume: 0.8,
+        // fadeDuration: 3.0,
+        volumeSettings: VolumeSettings.fade(
+            fadeDuration: Duration(seconds: 3), volume: 0.8),
         warningNotificationOnKill: Platform.isIOS,
         notificationSettings: alarm_lib.NotificationSettings(
           title: alarm.title,
@@ -248,8 +253,8 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
             assetAudioPath: 'assets/ringtones/${alarm.ringtone}',
             loopAudio: true,
             vibrate: alarm.vibrate,
-            volume: 0.8,
-            fadeDuration: 3.0,
+            volumeSettings: VolumeSettings.fade(
+                fadeDuration: Duration(seconds: 3), volume: 0.8),
             warningNotificationOnKill: Platform.isIOS,
             notificationSettings: alarm_lib.NotificationSettings(
               title: alarm.title,
@@ -295,42 +300,42 @@ class _CreateOrUpdateAlarmState extends State<CreateOrUpdateAlarm> {
     }
   }
 
-  int _getDaysOffset(String day) {
-    int today = DateTime.now().weekday;
-    int targetDay;
+  // int _getDaysOffset(String day) {
+  //   int today = DateTime.now().weekday;
+  //   int targetDay;
 
-    switch (day) {
-      case 'SUN':
-        targetDay = DateTime.sunday;
-        break;
-      case 'MON':
-        targetDay = DateTime.monday;
-        break;
-      case 'TUE':
-        targetDay = DateTime.tuesday;
-        break;
-      case 'WED':
-        targetDay = DateTime.wednesday;
-        break;
-      case 'THU':
-        targetDay = DateTime.thursday;
-        break;
-      case 'FRI':
-        targetDay = DateTime.friday;
-        break;
-      case 'SAT':
-        targetDay = DateTime.saturday;
-        break;
-      default:
-        return -1;
-    }
+  //   switch (day) {
+  //     case 'SUN':
+  //       targetDay = DateTime.sunday;
+  //       break;
+  //     case 'MON':
+  //       targetDay = DateTime.monday;
+  //       break;
+  //     case 'TUE':
+  //       targetDay = DateTime.tuesday;
+  //       break;
+  //     case 'WED':
+  //       targetDay = DateTime.wednesday;
+  //       break;
+  //     case 'THU':
+  //       targetDay = DateTime.thursday;
+  //       break;
+  //     case 'FRI':
+  //       targetDay = DateTime.friday;
+  //       break;
+  //     case 'SAT':
+  //       targetDay = DateTime.saturday;
+  //       break;
+  //     default:
+  //       return -1;
+  //   }
 
-    if (targetDay >= today) {
-      return targetDay - today;
-    } else {
-      return 7 - (today - targetDay);
-    }
-  }
+  //   if (targetDay >= today) {
+  //     return targetDay - today;
+  //   } else {
+  //     return 7 - (today - targetDay);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
