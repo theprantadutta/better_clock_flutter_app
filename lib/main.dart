@@ -6,7 +6,7 @@ import 'package:timezone/data/latest.dart' as tz;
 
 import 'navigation/app_navigation.dart';
 
-main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones(); // Initialize time zones
   await Alarm.init();
