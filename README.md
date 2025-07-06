@@ -3,8 +3,8 @@
 Better Clock is a Flutter app designed as an improved version of the default Android Clock app. It includes core features like setting Alarms, World Clock, Stopwatch, and Timer, aiming to provide a seamless and enhanced user experience.
 
 <p align="center">
-  <img alt="Light Theme Screenshot" src="./screenshots/Better_Clock_1_Light.jpg" width="45%" />
-  <img alt="Dark Theme Screenshot" src="./screenshots/Better_Clock_1_Dark.jpg" width="45%" />
+  <img alt="Light Theme Screenshot" src="./screenshots/1_Better_Clock_Light.jpg" width="45%" />
+  <img alt="Dark Theme Screenshot" src="./screenshots/1_Better_Clock_Dark.jpg" width="45%" />
 </p>
 
 ## Features
@@ -18,36 +18,36 @@ Better Clock is a Flutter app designed as an improved version of the default And
 ## Screenshots
 
 <p align="center">
-  <img alt="Light Theme Screenshot" src="./screenshots/Better_Clock_1_Light.jpg" width="45%" />
-  <img alt="Dark Theme Screenshot" src="./screenshots/Better_Clock_1_Dark.jpg" width="45%" />
+  <img alt="Light Theme Screenshot" src="./screenshots/1_Better_Clock_Light.jpg" width="45%" />
+  <img alt="Dark Theme Screenshot" src="./screenshots/1_Better_Clock_Dark.jpg" width="45%" />
 </p>
 
 <p align="center">
-  <img alt="Light Theme Screenshot" src="./screenshots/Better_Clock_2_Light.jpg" width="45%" />
-  <img alt="Dark Theme Screenshot" src="./screenshots/Better_Clock_2_Dark.jpg" width="45%" />
+  <img alt="Light Theme Screenshot" src="./screenshots/2_Better_Clock_Light.jpg" width="45%" />
+  <img alt="Dark Theme Screenshot" src="./screenshots/2_Better_Clock_Dark.jpg" width="45%" />
 </p>
 
 <p align="center">
-  <img alt="Light Theme Screenshot" src="./screenshots/Better_Clock_3_Light.jpg" width="45%" />
-  <img alt="Dark Theme Screenshot" src="./screenshots/Better_Clock_3_Dark.jpg" width="45%" />
+  <img alt="Light Theme Screenshot" src="./screenshots/3_Better_Clock_Light.jpg" width="45%" />
+  <img alt="Dark Theme Screenshot" src="./screenshots/3_Better_Clock_Dark.jpg" width="45%" />
 </p>
 
 <p align="center">
-  <img alt="Light Theme Screenshot" src="./screenshots/Better_Clock_4_Light.jpg" width="45%" />
-  <img alt="Dark Theme Screenshot" src="./screenshots/Better_Clock_4_Dark.jpg" width="45%" />
+  <img alt="Light Theme Screenshot" src="./screenshots/4_Better_Clock_Light.jpg" width="45%" />
+  <img alt="Dark Theme Screenshot" src="./screenshots/4_Better_Clock_Dark.jpg" width="45%" />
 </p>
 
 <p align="center">
-  <img alt="Light Theme Screenshot" src="./screenshots/Better_Clock_5_Light.jpg" width="45%" />
-  <img alt="Dark Theme Screenshot" src="./screenshots/Better_Clock_5_Dark.jpg" width="45%" />
+  <img alt="Light Theme Screenshot" src="./screenshots/5_Better_Clock_Light.jpg" width="45%" />
+  <img alt="Dark Theme Screenshot" src="./screenshots/5_Better_Clock_Dark.jpg" width="45%" />
 </p>
 
 <p align="center">
-  <img alt="Light Theme Screenshot" src="./screenshots/Better_Clock_6_Light.jpg" width="45%" />
-  <img alt="Dark Theme Screenshot" src="./screenshots/Better_Clock_6_Dark.jpg" width="45%" />
+  <img alt="Light Theme Screenshot" src="./screenshots/6_Better_Clock_Light.jpg" width="45%" />
+  <img alt="Dark Theme Screenshot" src="./screenshots/6_Better_Clock_Dark.jpg" width="45%" />
 </p>
 
 <p align="center">
-  <img alt="Light Theme Screenshot" src="./screenshots/Better_Clock_7_Light.jpg" width="45%" />
-  <img alt="Dark Theme Screenshot" src="./screenshots/Better_Clock_7_Dark.jpg" width="45%" />
+  <img alt="Light Theme Screenshot" src="./screenshots/7_Better_Clock_Light.jpg" width="45%" />
+  <img alt="Dark Theme Screenshot" src="./screenshots/7_Better_Clock_Dark.jpg" width="45%" />
 </p>
